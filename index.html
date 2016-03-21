@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf8">
+    <title>React Game Cmdb</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="app/css/main.css">
+    <style>
+    </style>
+    <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="app/js/plugins.js"></script>
+    <script src="bower_components/vue/dist/vue.min.js"></script>
+    <script src="bower_components/vue-strap/dist/vue-strap.min.js"></script>
+  </head>
+  <body>
+    <div class="btn-group" id="rightkey">
+      <ul class="dropdown-menu">
+        <li id="rightmodal">
+          <a @click="show">modal测试</a>
+          <modal id="realrightmodal" :show.sync="zoomModal" effect="zoom">
+            <div slot="modal-header" class="modal-header">
+              <button type="button" class="modal-btn close" @click="close" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+              <button type="button" class="modal-btn maxify" @click="max"><span  v-if='!ismax' class="glyphicon glyphicon-unchecked"></span>
+              <span v-if='ismax' class="glyphicon glyphicon-modal-window"></span></button>
+              <button type="button" class="modal-btn minify" @click="min"><span class="glyphicon glyphicon-minus"></span></button>
+              <h4 class="modal-title">
+                <b>设置背景图片</b>
+              </h4>
+            </div>
+            <div slot="modal-body" class="modal-body">...</div>
+            <!-- <div slot="modal-footer" class="modal-footer">
+              <button type="button" class="btn btn-default" @click='showCustomModal = false'>Exit</button>
+              <button type="button" class="btn btn-success" @click='showCustomModal = false'>Custom Save</button>
+            </div> -->
+          </modal>
+        </li>
+        <li><a href="#">右键功能测试</a></li>
+        <li><a href="#">右键功能测试</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#">右键功能测试</a></li>
+        <li><a href="#">右键功能测试</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#">右键功能测试</a></li>
+      </ul>
+    </div>
+    <div id="app">
+      <!--顶部开始菜单栏-->
+      <div class="header">
+        <div class="user-logo">
+          <i class="glyphicon glyphicon-user"></i>
+        </div>
+        <div class="header-menu">
+          <div class="right-menu">
+              <div class="input-group">
+                 <!-- <input type="text" name="start" class="form-control" data-date-format="yyyy-mm-dd hh:ii"> -->
+                <div class="input-group-addon"><span id="current_date"></span><i style="margin-left:10px" class="glyphicon glyphicon-calendar"></i>  
+                </div>
+              </div>
+          </div>
+          <div class="left-menu" id="usetting">
+            <dropdown>
+              <button type="button" class="btn btn-default dropdown-toggle hundred" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                开始菜单 <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu hundred">
+                <li><a href="#">修改个人设置</a></li>
+                <li><a href="#">我的任务管理(日历管理)</a></li>
+                <li><a href="#">记事本</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">游戏管理</a></li>
+                <li><a href="#">权限管理</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">用户管理</a></li>
+              </ul>
+            </dropdown>
+            <div class="input-group">
+              <div class="input-group-addon">当前用户数（<span class="badge">3</span>）</div>
+            </div>
+            <div class="input-group">
+              <div class="input-group-addon"> 当前登陆IP：<span id="current_ip"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--底部Dock-->
+      <div class="sidebar"  id="dock">
+        <div class="centerd">
+        <ul id="desktop">
+          <li v-for="item in apps">
+            <img v-bind:src="item.icon">
+          </li>
+          <li v-if="minifys.length>0" class="v-cut-line"></li>
+          <li v-for="item in minifys" @click="toggleMin(item)" class="desk-mini">
+            <img v-bind:src="item.icon" v-bind:title="item.name">
+            <!-- <span>{{item.name}}</span> -->
+          </li>
+        </ul>
+        </div>
+      </div>
+      <div class="containers">
+        <div class="arrows">
+          <div class="arrows_left"><i class="glyphicon glyphicon-triangle-left"></i></div>
+          <div class="arrows_right"><i class="glyphicon glyphicon-triangle-right"></i></div>
+        </div>
+        <div class="container_items">
+          <div class="container_item" id="applications">
+            <div class="app" v-for="item in apps" id="app{{$index}}" @click="show($index)">
+              <img v-bind:src="item.icon">
+              <span>{{item.name}}</span>
+              <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom">
+                <div slot="modal-header" class="modal-header">
+                  <button type="button" class="modal-btn close" @click="close($index)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                  <button type="button" class="modal-btn maxify" @click="max($index)"><span v-if="!ismax[$index]" class="glyphicon glyphicon-unchecked"></span>
+                  <span v-if="ismax[$index]" class="glyphicon glyphicon-modal-window"></span></button>
+                  <button type="button" class="modal-btn minify" @click="min($index)"><span  class="glyphicon glyphicon-minus"></span></button>
+                  <h4 class="modal-title">
+                    <b>{{item.name}}</b>
+                  </h4>
+                </div>
+                <div slot="modal-body" class="modal-body">...</div>
+              </modal>
+            </div>
+            <div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div><div class="app"></div>
+            <div class="app"></div>
+          </div>
+          <div class="container_item">
+            <div class="app" id="app1">
+              
+            </div>
+            <div class="app"></div>
+            <div class="app"></div>
+            <div class="app"></div>
+          </div>
+          <div class="container_item">
+            <div class="app"></div>
+          </div>
+          <div class="container_item">
+            <div class="app"></div>
+            <div class="app"></div>
+            <div class="app"></div>
+            <div class="app"></div>
+            <div class="app"></div>
+            <div class="app"></div>
+          </div>
+        </div>
+        <div class="bottom_tip">
+          <div class="ci_item current_con"></div>
+          <div class="ci_item"></div>
+          <div class="ci_item"></div>
+          <div class="ci_item"></div>
+        </div>
+      </div>
+      <!-- <div  class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="modal-btn close" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+              <button type="button" class="modal-btn minify"><span class="glyphicon glyphicon-unchecked"></span></button>
+              <button type="button" class="modal-btn maxify"><span class="glyphicon glyphicon-minus"></span></button>
+              <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <!--<script src="app/js/desktop.js"></script>-->
+    <script src="/dist/js/main.js"></script> 
+  </body>
+</html>
