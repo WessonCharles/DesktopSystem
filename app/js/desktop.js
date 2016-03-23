@@ -122,8 +122,7 @@ window.GCR = {
             proximity: 100,
             halign : 'center'
           })
-        })
-
+        },1)
     },
     ruleSelector:function(selector){
       /**
@@ -241,7 +240,7 @@ var rkmodal = new Vue({
       $("#realrightmodal .modal-dialog").css("z-index","");
     },
     min:function(){
-      $("#realrightmodal").removeClass('in').css("display","none");//与关闭操作相同，并加入到desktop最小化列表中
+      $("#realrightmodal").removeClass('in').addClass("maxout");//与关闭操作相同，并加入到desktop最小化列表中
       desks.minifys.push({
         el:$("#realrightmodal"),
         // show:false,
@@ -326,7 +325,8 @@ var desks = new Vue({
     toggleMin:function(item){
       // if(item.show){
         GCR.fishdock();
-        item.el.addClass('in').css("display","block");
+        item.el.css("display","block");
+        item.el.addClass('in').addClass("maxin").removeClass("maxout");
         this.minifys.splice(this.minifys.indexOf(item),1);
 
         console.log(this.minifys)
@@ -371,13 +371,14 @@ var apps = new Vue({
   methods:{
     show:function(index){
       if(index==999){
+        if(this.zoomadd)return false;
         GCR.modals.show($("#appmodal999"));
         this.zoomadd = true;
         zindex++;
         $("#appmodal999").addClass('in').css("display","block");
         $("#appmodal999").find(".modal-dialog").css("z-index",zindex);
       }else{
-        if(this.zooms[index]) return false;
+        if(this.zooms[index])return false;
         GCR.modals.show($("#appmodal"+index));
         this.zooms[index] = true;
         zindex++;
@@ -385,21 +386,31 @@ var apps = new Vue({
         $("#appmodal"+index).find(".modal-dialog").css("z-index",zindex);
       }
     },
-    close:function(index){
+    close:function(index,p){
       if(index==999){
-        this.zoomadd = false;
-        zindex--;
-        $("#appmodal999").removeClass('in').css("display","none")
+        !p?this.zoomadd = false:null;
+        !p?zindex--:null;
+        $("#appmodal999").removeClass('in');
         $("#appmodal999").find(".modal-dialog").css("z-index","");
+        if(p){$("#appmodal999").addClass("maxout");
+          setTimeout(function(){
+            $("#appmodal999").css({"display":"none"});
+          },500)
+        }
       }else{
-        this.zooms[index] = false;
-        zindex--;
-        $("#appmodal"+index).removeClass('in').css("display","none")
+        !p?this.zooms[index] = false:null;
+        !p?zindex--:null;
+        $("#appmodal"+index).removeClass('in');
         $("#appmodal"+index).find(".modal-dialog").css("z-index","");
+        if(p){$("#appmodal"+index).addClass("maxout");
+          setTimeout(function(){
+            $("#appmodal"+index).css({"display":"none"});
+          },500)
+        }
       }
     },
     min:function(index){
-      this.close(index);//与关闭操作相同，并加入到desktop最小化列表中
+      this.close(index,"animate");//与关闭操作相同，并加入到desktop最小化列表中
       var name = index==999?"增加项目":this.apps[index].name;
       var icon = index==999?'app/images/desktop-icons/folder-document.png':this.apps[index].icon;
       desks.minifys.push({
