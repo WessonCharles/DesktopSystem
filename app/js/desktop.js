@@ -67,6 +67,7 @@ window.GCR = {
           var box = $("#app .containers .container_items"),
           w = $("#app .containers")[0].offsetWidth;
           box.css({"margin-left":"-"+w*index+"px"})
+          _this.fishdock();
       })
 
 
@@ -97,7 +98,7 @@ window.GCR = {
       //添加IE右击事件
       $("#app").bind("mousedown",function (event){
         // rightkeymenu.removeClass('open')
-        if(event.which==3){
+        if(event.which==3&&$(event.target).parents(".app").length==0&&!$(event.target).hasClass('app')){
            rightkeymenu.css("top",event.pageY-20).css("left",event.pageX).addClass("open");
         }
         if(event.which ==1){
@@ -108,6 +109,10 @@ window.GCR = {
     },
     fishdock:function(){
         setTimeout(function(){
+          var sidebar = $("#dock");
+          sidebar.css({
+            marginLeft:($("body")[0].clientWidth-sidebar[0].clientWidth)/2
+          })
           $('#dock').Fisheye({
             maxWidth: 18,
             items: 'li',
@@ -188,6 +193,7 @@ var modal = VueStrap.modal,
 Vue.component('modal',modal);
 Vue.component('tooltip',tooltip);
 Vue.component('dropdown',dropdown)
+var zindex = 0;
 
 /**
 *实例化用户下拉框
@@ -222,13 +228,17 @@ var rkmodal = new Vue({
   },
   methods:{
     show:function(){
+      if(this.zoomModal) return false;
       GCR.modals.show($("#realrightmodal"));
       this.zoomModal = true;
-
+      zindex++;
+      $("#realrightmodal .modal-dialog").css("z-index",zindex);
       // rightkeymenu.removeClass('open')
     },
     close:function(){
       this.zoomModal = false;
+      zindex--;
+      $("#realrightmodal .modal-dialog").css("z-index","");
     },
     min:function(){
       $("#realrightmodal").removeClass('in').css("display","none");//与关闭操作相同，并加入到desktop最小化列表中
@@ -310,7 +320,7 @@ var desks = new Vue({
     }
   },
   ready:function(){
-    
+
   },
   methods:{
     toggleMin:function(item){
@@ -353,16 +363,21 @@ var apps = new Vue({
   },
   methods:{
     show:function(index){
+      if(this.zooms[index]) return false;
       console.log(index)
       GCR.modals.show($("#appmodal"+index));
       this.zooms[index] = true;
       console.log(this)
+      zindex++;
       $("#appmodal"+index).addClass('in').css("display","block");
+      $("#appmodal"+index).find(".modal-dialog").css("z-index",zindex);
       // rightkeymenu.removeClass('open')
     },
     close:function(index){
       this.zooms[index] = false;
-      $("#appmodal"+index).removeClass('in').css("display","none");
+      zindex--;
+      $("#appmodal"+index).removeClass('in').css("display","none")
+      $("#appmodal"+index).find(".modal-dialog").css("z-index","");
     },
     min:function(index){
       this.close(index);//与关闭操作相同，并加入到desktop最小化列表中
