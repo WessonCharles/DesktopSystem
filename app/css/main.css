@@ -293,7 +293,7 @@ li.desk-mini span {
     height:90px;
     float:left;
     margin:10px 10px;
-    background: rgba(255,255,255,0.4);
+    /*background: rgba(255,255,255,0.4);*/
     border-radius: 10px;
     text-align: center;
         transition: all 0.3s;
@@ -302,12 +302,17 @@ li.desk-mini span {
     -o-transition: all 0.3s;
 }
 .container_item .app:hover{
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.4);
 }
 .container_item .app img{
     width:90%;
     height:90%;
     margin:5%;
+}
+.add-app img{
+    width:80%!important;
+    height: 80%!important;
+    margin:10%!important;
 }
 .containers .bottom_tip{
     position: absolute;
@@ -397,6 +402,25 @@ li.desk-mini span {
 }
 .modal-header {
     padding: 5px 15px;
+    FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=rgb(243,243,239),endColorStr=rgb(227,227,227)); /*IE 6 7 8*/ 
+    background: -ms-linear-gradient(top, rgb(243,243,239),  rgb(227,227,227));        /* IE 10 */
+    background:-moz-linear-gradient(top,rgb(243,243,239),rgb(227,227,227));/*火狐*/ 
+    background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgb(243,243,239)), to(rgb(227,227,227)));/*谷歌*/ 
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(243,243,239)), to(rgb(227,227,227)));      /* Safari 4-5, Chrome 1-9*/
+    background: -webkit-linear-gradient(top, rgb(243,243,239), rgb(227,227,227));   /*Safari5.1 Chrome 10+*/
+    background: -o-linear-gradient(top, rgb(243,243,239), rgb(227,227,227)); 
+}
+.modal-content{
+    background: rgb(243,243,243) url("../images/modal-back.png") repeat;
+    padding-bottom:41px;
+}
+.modal-footer{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+.modal-content{
+    border-radius: 3px;
 }
 .modal-btn{
     border-radius: 9px;
@@ -413,11 +437,48 @@ li.desk-mini span {
     outline: none;
     font-weight: lighter!important;
     outline: 0;
+    transform: scale(0.95);
+    -moz-transform: scale(0.95);
+    -webkit-transform: scale(0.95);
+    -o-transform: scale(0.95);
+}
+.modal-btn:hover,.modal-btn:focus{
+    color:#000;
+}
+.modal-btn .glyphicon{
+    top: 2px;
+    left: 3px;
+    position: absolute;
 }
 .modal-footer-resize{
     position: absolute;
     width: 100%;
     bottom: 0;
+}
+.btn{
+   padding:2px 15px
+}
+.btn-success,.btn-primary{
+    color: #fff;
+    FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=rgb(100,185,245),endColorStr=rgb(45,142,252))!important; /*IE 6 7 8*/ 
+   background: -ms-linear-gradient(top, rgb(100,185,245),  rgb(45,142,252))!important;        /* IE 10 */
+   background:-moz-linear-gradient(top,rgb(100,185,245),rgb(45,142,252))!important;/*火狐*/ 
+   background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgb(100,185,245)), to(rgb(45,142,252)))!important;/*谷歌*/ 
+   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(100,185,245)), to(rgb(45,142,252)))!important;      /* Safari 4-5, Chrome 1-9*/
+   background: -webkit-linear-gradient(top, rgb(100,185,245), rgb(45,142,252))!important;   /*Safari5.1 Chrome 10+*/
+   background: -o-linear-gradient(top, rgb(100,185,245), rgb(45,142,252))!important;
+   border-color: rgb(33,125,235)!important;
+}
+.btn-success:hover,.btn-primary:hover{
+    border-color: rgb(33,125,235)!important;
+    background: rgb(33,125,235)!important;
+}
+.form-control{
+    height: 25px;
+    padding: 2px 12px;
+}
+.form-control:focus{
+    border:1px solid rgb(100,185,245);
 }
 .minify{
     background-color: rgb(254,191,49);
