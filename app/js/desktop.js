@@ -325,6 +325,7 @@ var desks = new Vue({
   methods:{
     toggleMin:function(item){
       // if(item.show){
+        GCR.fishdock();
         item.el.addClass('in').css("display","block");
         this.minifys.splice(this.minifys.indexOf(item),1);
 
@@ -348,7 +349,11 @@ var apps = new Vue({
       ],
       zooms:[false,false,false],
       ismax:[false,false,false],
-      init_val:[]
+      init_val:[],
+      /*以下为ADD APP 按钮单独写的部分属性*/
+      zoomadd:false,
+      ismaxadd:false,
+      init_valadd:{}
     }
   },
   ready:function(){
@@ -358,53 +363,84 @@ var apps = new Vue({
       $("#appmodal"+i).appendTo($("body"));
       this.target[i] = $("#appmodal"+i).find(".modal-dialog");
     }
+    this.targetadd = $("#appmodal999").find(".modal-dialog");
+    $("#appmodal999").appendTo($("body"))
     $("body .modal .modal-dialog").addClass("dialog-init").resizable();
     $("body .modal").draggable({handle:'.modal-header'});
   },
   methods:{
     show:function(index){
-      if(this.zooms[index]) return false;
-      console.log(index)
-      GCR.modals.show($("#appmodal"+index));
-      this.zooms[index] = true;
-      console.log(this)
-      zindex++;
-      $("#appmodal"+index).addClass('in').css("display","block");
-      $("#appmodal"+index).find(".modal-dialog").css("z-index",zindex);
-      // rightkeymenu.removeClass('open')
+      if(index==999){
+        GCR.modals.show($("#appmodal999"));
+        this.zoomadd = true;
+        zindex++;
+        $("#appmodal999").addClass('in').css("display","block");
+        $("#appmodal999").find(".modal-dialog").css("z-index",zindex);
+      }else{
+        if(this.zooms[index]) return false;
+        GCR.modals.show($("#appmodal"+index));
+        this.zooms[index] = true;
+        zindex++;
+        $("#appmodal"+index).addClass('in').css("display","block");
+        $("#appmodal"+index).find(".modal-dialog").css("z-index",zindex);
+      }
     },
     close:function(index){
-      this.zooms[index] = false;
-      zindex--;
-      $("#appmodal"+index).removeClass('in').css("display","none")
-      $("#appmodal"+index).find(".modal-dialog").css("z-index","");
+      if(index==999){
+        this.zoomadd = false;
+        zindex--;
+        $("#appmodal999").removeClass('in').css("display","none")
+        $("#appmodal999").find(".modal-dialog").css("z-index","");
+      }else{
+        this.zooms[index] = false;
+        zindex--;
+        $("#appmodal"+index).removeClass('in').css("display","none")
+        $("#appmodal"+index).find(".modal-dialog").css("z-index","");
+      }
     },
     min:function(index){
       this.close(index);//与关闭操作相同，并加入到desktop最小化列表中
+      var name = index==999?"增加项目":this.apps[index].name;
+      var icon = index==999?'app/images/desktop-icons/folder-document.png':this.apps[index].icon;
       desks.minifys.push({
         el:$("#appmodal"+index),
         index:index,
         // show:false,
-        name:this.apps[index].name,
-        icon:this.apps[index].icon
+        name:name,
+        icon:icon
       });
       GCR.fishdock();
     },
     max:function(index){
-      console.log(this.target)
-      this.ismax[index] = !this.ismax[index];
-      console.log(this.target[0][0])
-      console.log(index)
-      var _target = this.target[parseInt(index)][0];
-      if(this.ismax[index]){//经过上述转换以后说明ismax是放大时候的状态，因此，要记录原始的width height left top等
-        this.init_val[index] = {
-          left:_target.offsetLeft,
-          top:_target.offsetTop,
-          width:_target.offsetWidth,
-          height:_target.offsetHeight
+      if(index==999){
+        this.ismaxadd = !this.ismaxadd;
+        var _target = this.targetadd[0];
+        if(this.ismaxadd){//经过上述转换以后说明ismax是放大时候的状态，因此，要记录原始的width height left top等
+          this.init_valadd = {
+            left:_target.offsetLeft,
+            top:_target.offsetTop,
+            width:_target.offsetWidth,
+            height:_target.offsetHeight
+          }
         }
+        GCR.modals.max(this.ismaxadd,this.targetadd,this.init_valadd);
+      }else{
+        console.log(this.target)
+        this.ismax[index] = !this.ismax[index];
+        console.log(this.target[0][0])
+        console.log(index)
+        var _target = this.target[parseInt(index)][0];
+        if(this.ismax[index]){//经过上述转换以后说明ismax是放大时候的状态，因此，要记录原始的width height left top等
+          this.init_val[index] = {
+            left:_target.offsetLeft,
+            top:_target.offsetTop,
+            width:_target.offsetWidth,
+            height:_target.offsetHeight
+          }
+        }
+        GCR.modals.max(this.ismax[index],this.target[index],this.init_val[index]);
       }
-      GCR.modals.max(this.ismax[index],this.target[index],this.init_val[index]);
+      
     }
   }
 })

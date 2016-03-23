@@ -5,6 +5,7 @@
     <title>React Game Cmdb</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="app/css/mac.css">
     <link rel="stylesheet" href="app/css/main.css">
     <style>
     </style>
@@ -70,12 +71,12 @@
                 <li><a href="#">记事本</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="#">游戏管理</a></li>
+                <li><a href="#">平台管理</a></li>
                 <li><a href="#">权限管理</a></li>
-                <li role="separator" class="divider"></li>
                 <li><a href="#">用户管理</a></li>
               </ul>
             </dropdown>
-            <div class="input-group">
+            <div class="input-group" style="margin-top: -2px;">
               <div class="input-group-addon">当前用户数（<span class="badge">3</span>）</div>
             </div>
             <div class="input-group">
@@ -106,7 +107,7 @@
         </div>
         <div class="container_items">
           <div class="container_item" id="applications">
-            <div class="app" v-for="item in apps" id="app{{$index}}" @click="show($index)">
+            <div class="app" v-for="item in apps" id="app{{$index}}" @click="show(event,$index)">
               <img v-bind:src="item.icon">
               <span>{{item.name}}</span>
               <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom">
@@ -122,7 +123,121 @@
                 <div slot="modal-body" class="modal-body">...</div>
               </modal>
             </div>
-            <div class="app"></div>
+            <div class="app add-app" id="app999" @click="show(999)">
+              <img src="app/images/app-icons/add-app.png">
+              <modal id="appmodal999" :show.sync="zoomadd" effect="zoom">
+                <div slot="modal-header" class="modal-header">
+                  <button type="button" class="modal-btn close" @click="close(999)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                  <button type="button" class="modal-btn maxify" @click="max(999)"><span v-if="!ismaxadd" class="glyphicon glyphicon-unchecked"></span>
+                  <span v-if="ismaxadd" class="glyphicon glyphicon-modal-window"></span></button>
+                  <button type="button" class="modal-btn minify" @click="min(999)"><span  class="glyphicon glyphicon-minus"></span></button>
+                  <h4 class="modal-title">
+                    <b>增加游戏</b>
+                  </h4>
+                </div>
+                <div slot="modal-body" class="modal-body">
+                  <h6>增加游戏表单</h6>
+                  <hr>
+                  <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Input Box</label>
+                      <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="Input Box">
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Password</label>
+                      <div class="col-lg-8">
+                        <input type="password" class="form-control" placeholder="Password Box">
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Textarea</label>
+                      <div class="col-lg-8">
+                        <textarea class="form-control" rows="3" placeholder="Textarea"></textarea>
+                      </div>
+                    </div>    
+                    
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Checkbox</label>
+                      <div class="col-lg-8">
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
+                        </label>
+                        <label class="checkbox-inline">
+                          <input type="checkbox" id="inlineCheckbox3" value="option3"> 3
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Radio Box</label>
+                      <div class="col-lg-8">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                            Option one is this and that—be sure to include why it's great
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            Option two can be something else and selecting it will deselect option one
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Select Box</label>
+                      <div class="col-lg-8">
+                        <select class="form-control">
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                      </div>
+                    </div>     
+
+                    <div class="form-group">
+                      <label class="col-lg-4 control-label">Select Box</label>
+                      <div class="col-lg-8">
+                        <select multiple="" class="form-control">
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                      </div>
+                    </div>   
+
+                        <hr>
+                    <div class="form-group">
+                      <div class="col-lg-offset-1 col-lg-9">
+                        <button type="button" class="btn btn-default">Default</button>
+                        <button type="button" class="btn btn-primary">Primary</button>
+                        <button type="button" class="btn btn-success">Success</button>
+                        <button type="button" class="btn btn-info">Info</button>
+                        <button type="button" class="btn btn-warning">Warning</button>
+                        <button type="button" class="btn btn-danger">Danger</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div slot="modal-footer" class="modal-footer">
+                  <button type="button" class="btn btn-default" @click='showCustomModal = false'>Exit</button>
+                  <button type="button" class="btn btn-success" @click='showCustomModal = false'>Custom Save</button>
+                </div>
+              </modal>
+            </div>
             <div class="app"></div><div class="app"></div>
             <div class="app"></div><div class="app"></div>
             <div class="app"></div><div class="app"></div>
