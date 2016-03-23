@@ -37,7 +37,14 @@
             </div> -->
           </modal>
         </li>
-        <li><a href="#">右键功能测试</a></li>
+        <li class="menu"><a><i class="glyphicon glyphicon-play"></i>右键功能测试 </a>
+            <ul>
+              <li><a>多项测试</a></li>
+              <li><a>多项测试</a></li>
+              <li><a>多项测试</a></li>
+              <li><a>多项测试</a></li>
+            </ul>
+        </li>
         <li><a href="#">右键功能测试</a></li>
         <li role="separator" class="divider"></li>
         <li><a href="#">右键功能测试</a></li>
@@ -107,7 +114,7 @@
         </div>
         <div class="container_items">
           <div class="container_item" id="applications">
-            <div class="app" v-for="item in apps" id="app{{$index}}" @click="show(event,$index)">
+            <div class="app" v-for="item in apps" id="app{{$index}}" @click="show($index)">
               <img v-bind:src="item.icon">
               <span>{{item.name}}</span>
               <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom">

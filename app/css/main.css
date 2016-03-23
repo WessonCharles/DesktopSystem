@@ -96,6 +96,42 @@ a{
     box-shadow: none;
     color:blue;
 }
+.dropdown-menu li > a {
+    color: #000;
+    line-height: 25px;
+    padding: 0px 20px;
+    display: inline-block;
+    width: 100%;
+}
+li.menu ul{
+    background: #fafafa;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid #d2d2d2;
+    box-shadow: inset 0px 1px 2px #fff;
+    position: absolute;
+    top: 0%;
+    left: 100%;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+li.menu:hover ul{
+    display: block;
+}
+
+li.menu i {
+    float: right;
+    margin: 5px 0 0 0;
+}
 .hundred{
     /*width:100%;*/
 }
@@ -351,6 +387,80 @@ li.desk-mini span {
   height:auto!important;
   width:auto!important;
   overflow: visible!important;
+    transition: display 1.2s;
+  -moz-transition: display 1.2s; 
+  -webkit-transition: display 1.2s; 
+  -o-transition: display 1.2s;
+}
+.modal.maxin .modal-dialog{
+    animation:maxin 0.5s 1;
+    -webkit-animation:maxin 0.5s 1;
+}
+.modal.maxout .modal-dialog{
+    animation:maxout 0.5s 1;
+    -webkit-animation:maxout 0.5s 1;
+}
+@keyframes maxin {
+  0% {
+      transform: scale(0.2);
+      -moz-transform: scale(0.2);
+      -webkit-transform:scale(0.2); /* Safari and Chrome */
+      -o-transform:scale(0.2);
+      top: 80%;
+      display: none;
+  }
+ /* 25% {
+      transform: scale(0.35);
+      -moz-transform: scale(0.35);
+      -webkit-transform:scale(0.35); 
+      -o-transform:scale(0.35);
+      top: 75%;
+  }
+  50% {
+        transform: scale(0.5);
+      -moz-transform: scale(0.5);
+      -webkit-transform:scale(0.5); 
+      -o-transform:scale(0.5);
+      top:50%;
+  }*/
+  /*75% {
+      transform: scale(0.75);
+      -moz-transform: scale(0.75);
+      -webkit-transform:scale(0.75); 
+      -o-transform:scale(0.75);
+      top:25%;  
+  }*/
+  100% {
+    transform: scale(1);
+      -moz-transform: scale(1);
+      -webkit-transform:scale(1); /* Safari and Chrome */
+      -o-transform:scale(1);
+      top:10%;
+  }
+}
+@keyframes maxout {
+  0% {
+      transform: scale(1);
+      -moz-transform: scale(1);
+      -webkit-transform:scale(1); 
+      -o-transform:scale(1);
+      top:20%;
+  }
+  50% {
+      transform: scale(0.5);
+      -moz-transform: scale(0.5);
+      -webkit-transform:scale(0.5); 
+      -o-transform:scale(0.5);
+      top:50%;
+  }
+  100% {
+      transform: scale(0.2);
+      -moz-transform: scale(0.2);
+      -webkit-transform:scale(0.2); 
+      -o-transform:scale(0.2);
+      top: 100%;
+      display: none;
+  }
 }
 .modal-dialog{
     position: absolute;
@@ -360,7 +470,7 @@ li.desk-mini span {
     left: 0px;
     top: 0px;
     right: 0px;
-    border: 4px double #555;
+    /*border: 4px double #555;*/
     bottom: 0px;
     width:auto!important;
     height:auto!important;
