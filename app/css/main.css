@@ -143,7 +143,7 @@ li.menu i {
 /**
  * 底部dock
  */
-.sidebar{
+.dock-outer{
 	/*position: fixed;
     border-radius: 10px 10px 5px 5px;
     padding: 10px 0 10px 0;
@@ -161,7 +161,6 @@ li.menu i {
     position: fixed;
     border-radius: 10px 10px 5px 5px;
     padding: 10px 0 10px 0;
-    overflow: hidden;
     padding-top: 30px;
     background: #ddd;
     height: 70px;
@@ -169,12 +168,12 @@ li.menu i {
     bottom: 0;
     z-index: 20;
 }
-.sidebar ul{
+.dock-outer ul{
 	list-style:none;
 	position: relative;
     padding: 0 15px;
 }
-.sidebar ul>li{
+.dock-outer ul>li{
 	/*transition: all 0.2s;
 -moz-transition: all 0.2s; 
 -webkit-transition: all 0.2s; 
@@ -208,7 +207,7 @@ li.desk-mini span {
     position: absolute;
     margin: -4px -10px 0px -10px;
 }
-.sidebar ul>li img{
+.dock-outer ul>li img{
     width:100%;
     height:100%;
 }
@@ -220,7 +219,7 @@ li.desk-mini span {
 -webkit-transform:scale(1.3,1.3); 
 -o-transform:scale(1.3,1.3);
 }*/
-.sidebar blockquote{
+.dock-outer blockquote{
 	border-left: none;
 	z-index: 100;
 }
@@ -466,6 +465,27 @@ li.desk-mini span {
       top: 100%;
       display: none;
   }
+}
+.flop{
+    animation:runout 1s 1;
+    -webkit-animation:runout 1s 1;
+}
+@keyframes runout{
+    0% {
+      margin-top:-20px;
+    }
+    25%{
+        margin-top: -39px;
+    }
+    50%{
+        margin-top:-15px;
+    }
+    75% {
+      margin-top:-40px;
+    }
+    100% {
+      margin-top: -20px;
+    }
 }
 .modal-dialog{
     position: absolute;

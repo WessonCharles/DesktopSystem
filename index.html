@@ -93,18 +93,20 @@
         </div>
       </div>
       <!--底部Dock-->
-      <div class="sidebar"  id="dock">
+      <div class="dock-outer" id="dock">
+        <div class="sidebar">
+        </div>
         <div class="centerd">
-        <ul id="desktop">
-          <li v-for="item in apps">
-            <img v-bind:src="item.icon">
-          </li>
-          <li v-if="minifys.length>0" class="v-cut-line"></li>
-          <li v-for="item in minifys" @click="toggleMin(item)" class="desk-mini">
-            <img v-bind:src="item.icon" v-bind:title="item.name">
-            <!-- <span>{{item.name}}</span> -->
-          </li>
-        </ul>
+            <ul id="desktop">
+              <li v-for="item in apps">
+                <img v-bind:src="item.icon">
+              </li>
+              <li v-if="minifys.length>0" class="v-cut-line"></li>
+              <li v-for="item in minifys" data-target="{{item.target}}" @click="toggleMin(item)" v-bind:class="{'flop':isflop[$index]}" class="desk-mini">
+                <img v-bind:src="item.icon" v-bind:title="item.name">
+                <!-- <span>{{item.name}}</span> -->
+              </li>
+            </ul>
         </div>
       </div>
       <div class="containers">
