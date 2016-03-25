@@ -1,0 +1,115 @@
+<link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../css/mac.css">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<style type="text/css">
+	body{
+		background: rgb(243,243,243) url("../images/modal-back.png") repeat;
+		padding: 0;
+		border: 0;
+	}
+</style>
+<div id="tabs">
+	<tabs>
+	  <tab header="搜索">
+	    <div class="row">
+			<div class="col-xs-6 col-md-4">
+				<div class="well">
+					<h2>服务器数量： <small>130</small></h2>
+					<h2>区服数量： <small>300</small></h2>
+				</div>
+			</div>
+			<div class="col-xs-6 col-md-4">
+				<div class="well"></div>
+			</div>
+			<div class="col-xs-6 col-md-4">
+				<div class="well"></div>
+			</div>
+	    </div>
+
+	    <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
+	    <div class="row">
+		    <div class="col-md-6 col-md-offset-3 text-center"><h3>搜索IP、区服、状态</h3></div>
+		    <div class="col-md-8 col-md-offset-2 panel-body">
+		    	<v-select :value.sync="arr" :options="fruitOptions" :search="true" placeholder="搜索位置" class="hundrd">
+		    	</v-select>
+		    </div>
+	    </div>
+
+	    <!-- Columns are always 50% wide, on mobile and desktop -->
+	    <div class="row">
+	      <div class="col-xs-10 col-md-offset-1">
+	      	<div class="input-group panel">
+	      	     <div class="input-group-addon search-addon"><span class="glyphicon glyphicon-search"></span></div>
+	      	     <input type="text" class="form-control search-input" id="exampleInputAmount" placeholder="IP">
+	      	   </div>
+	      </div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-10 col-md-offset-1">
+	    		<div class="input-group panel">
+	    		     <div class="input-group-addon search-addon"><span class="glyphicon glyphicon-search"></span></div>
+	    		     <input type="text" class="form-control search-input" id="exampleInputAmount" placeholder="区服">
+	    		   </div>
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-xs-10 col-md-offset-1">
+	    		<div class="input-group panel">
+	    		     <div class="input-group-addon search-addon"><span class="glyphicon glyphicon-search"></span></div>
+	    		     <input type="text" class="form-control search-input" id="exampleInputAmount" placeholder="状态">
+	    		   </div>
+	    	</div>
+	    </div>
+	  </tab>
+	  <tab header="平台">
+	    sdafsdafdsaf
+	  </tab>
+	  <tab header="服务器">
+	    dsfasdfasdfa
+	  </tab>
+	  <tab header="区服">
+	    dsfasdfasdfa
+	  </tab>
+	  <tab header="命令">
+	    dsfasdfasdfa
+	  </tab>
+	  <tab header="域名">
+	    dsfasdfasdfa
+	  </tab>
+	  <tab header="日志">
+	    dsfasdfasdfa
+	  </tab>
+	  <tab header="监控">
+	    dsfasdfasdfa
+	  </tab>
+	</tabs>
+</div>
+<script src="../../bower_components/vue/dist/vue.min.js"></script>
+<script src="../../bower_components/vue-strap/dist/vue-strap.min.js"></script>
+<script type="text/javascript">
+	var tabs = VueStrap.tabset,
+		tab = VueStrap.tab,
+		select = VueStrap.select,
+		option = VueStrap.option;
+	// console.log(modal)
+	Vue.component('tabs',tabs);
+	Vue.component('tab',tab);
+	Vue.component('vSelect',select);
+	Vue.component('vOption',option);
+	var tabss = new Vue({
+	  el:"#tabs",
+	  data:function(){
+	  	return {
+	  		fruitOptions:[
+  			  {value:'apple', label:'服务器'},
+  			  {value:'banana', label:'游戏区服'},
+  			  {value:'cherry', label:'任务日志'},
+  			  {value:'orange', label:'监控'}
+  			],
+  			arr:[]
+	  	}
+	  }
+	});
+
+	console.log(tabss)
+</script>

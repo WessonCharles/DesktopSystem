@@ -4,6 +4,18 @@ html,body{
     position: relative;
     overflow: hidden;
     width: 100%;
+    -webkit-user-select: text;  /* Chrome all / Safari all */
+    -moz-user-select: text;     /* Firefox all */
+    -ms-user-select: text;      /* IE 10+ */
+    -o-user-select: text;
+    user-select: text;
+}
+.unselection{
+    /*-webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;   
+    -o-user-select: none;
+    user-select: none;*/
 }
 h4{
     font-size: 16px;
@@ -161,12 +173,17 @@ li.menu i {
     position: fixed;
     border-radius: 10px 10px 5px 5px;
     padding: 10px 0 10px 0;
-    padding-top: 30px;
+    /*padding-top: 30px;*/
     background: #ddd;
     height: 70px;
     width: auto;
     bottom: 0;
     z-index: 20;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    -o-user-select: none;
+    user-select: none;
 }
 .dock-outer ul{
 	list-style:none;
@@ -196,7 +213,7 @@ li.desk-mini {
     -o-transition: all 0.3s;*/
 }
 li.v-cut-line {
-    margin-top: -19px!important;
+    margin-top: 0px!important;
     width: 2px!important;
     margin-left: 10px!important;
     background-color: rgb(39,51,63);
@@ -340,6 +357,11 @@ li.desk-mini span {
     -moz-transition: all 0.3s; 
     -webkit-transition: all 0.3s; 
     -o-transition: all 0.3s;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    -o-user-select: none;
+    user-select: none;
 }
 .container_item .app:hover{
     background: rgba(255,255,255,0.4);
@@ -478,13 +500,13 @@ li.desk-mini span {
         margin-top: -39px;
     }
     50%{
-        margin-top:-15px;
+        margin-top:0px;
     }
     75% {
-      margin-top:-40px;
+      margin-top:-30px;
     }
     100% {
-      margin-top: -20px;
+      margin-top: 0px;
     }
 }
 .modal-dialog{
@@ -549,6 +571,9 @@ li.desk-mini span {
     background: rgb(243,243,243) url("../images/modal-back.png") repeat;
     padding-bottom:41px;
 }
+.modal-body{
+    height:800px;
+}
 .modal-footer{
     position: absolute;
     width: 100%;
@@ -589,6 +614,12 @@ li.desk-mini span {
     position: absolute;
     width: 100%;
     bottom: 0;
+}
+.nofoot .modal-content{
+    padding-bottom: 0!important;
+}
+.nofoot .modal-footer{
+    display: none!important;
 }
 .btn{
    padding:2px 15px
@@ -639,4 +670,25 @@ modal{
 }
 .v-cut-line{
 
+}
+.hundrd{
+    width: 100%;
+}
+.hundrd .btn{
+    width:100%;
+}
+.hundrd .dropdown-menu{
+    width:100%;
+}
+.search-addon{
+    padding: 5px 12px;
+    background-color: transparent;
+    border-radius: 20px;
+}
+.search-input{
+    border-left: none;
+    border-radius: 20px;
+}
+.table {
+    font-size: 12px;
 }

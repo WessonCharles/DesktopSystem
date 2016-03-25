@@ -4,7 +4,7 @@
     <meta charset="utf8">
     <title>React Game Cmdb</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="app/css/mac.css">
     <link rel="stylesheet" href="app/css/main.css">
     <style>
@@ -77,10 +77,42 @@
                 <li><a href="#">我的任务管理(日历管理)</a></li>
                 <li><a href="#">记事本</a></li>
                 <li role="separator" class="divider"></li>
-                <li><a href="#">游戏管理</a></li>
-                <li><a href="#">平台管理</a></li>
+                <li v-for="p in pages">
+                  <a @click="show(p)">{{name[p]}}</a>
+                  <modal v-bind:id="p+'_manage'" :show.sync="zooms[p]" effect="zoom">
+                    <div slot="modal-header" class="modal-header">
+                      <button type="button" class="modal-btn close" @click="close(p)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                      <button type="button" class="modal-btn maxify" @click="max(p)"><span v-if="!ismax[p]" class="glyphicon glyphicon-unchecked"></span>
+                      <span v-if="ismax[p]" class="glyphicon glyphicon-modal-window"></span></button>
+                      <button type="button" class="modal-btn minify" @click="min(p)"><span  class="glyphicon glyphicon-minus"></span></button>
+                      <h4 class="modal-title">
+                        <b>{{name[p]}}</b>
+                      </h4>
+                    </div>
+                    <div slot="modal-body" class="modal-body">
+                      <object style="border:0px" type="text/x-scriptlet" v-bind:data="'app/template/'+p+'-genetor.html'" width=100% height=100%></object>
+                    </div>
+                  </modal>
+                </li>
+                <!-- <li><a href="#">游戏管理</a></li>
+                <li><a href="#" @click="show('plat')">平台管理</a>
+                <modal id="plat_manage" :show.sync="platzoom" effect="zoom">
+                    <div slot="modal-header" class="modal-header">
+                      <button type="button" class="modal-btn close" @click="close()" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                      <button type="button" class="modal-btn maxify" @click="max()"><span v-if="!ismax" class="glyphicon glyphicon-unchecked"></span>
+                      <span v-if="ismax" class="glyphicon glyphicon-modal-window"></span></button>
+                      <button type="button" class="modal-btn minify" @click="min()"><span  class="glyphicon glyphicon-minus"></span></button>
+                      <h4 class="modal-title">
+                        <b>平台管理</b>
+                      </h4>
+                    </div>
+                    <div slot="modal-body" class="modal-body">
+                      <object style="border:0px" type="text/x-scriptlet" data="app/template/plat-genetor.html" width=100% height=100%></object>
+                    </div>
+                  </modal>
+                </li>
                 <li><a href="#">权限管理</a></li>
-                <li><a href="#">用户管理</a></li>
+                <li><a href="#">用户管理</a></li> -->
               </ul>
             </dropdown>
             <div class="input-group" style="margin-top: -2px;">
@@ -119,7 +151,7 @@
             <div class="app" v-for="item in apps" id="app{{$index}}" @click="show($index)">
               <img v-bind:src="item.icon">
               <span>{{item.name}}</span>
-              <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom">
+              <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom"  class="nofoot">
                 <div slot="modal-header" class="modal-header">
                   <button type="button" class="modal-btn close" @click="close($index)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
                   <button type="button" class="modal-btn maxify" @click="max($index)"><span v-if="!ismax[$index]" class="glyphicon glyphicon-unchecked"></span>
@@ -129,7 +161,9 @@
                     <b>{{item.name}}</b>
                   </h4>
                 </div>
-                <div slot="modal-body" class="modal-body">...</div>
+                <div slot="modal-body" class="modal-body">
+                  <object style="border:0px" type="text/x-scriptlet" data="app/template/app-genetor.html" width=100% height=100%></object>
+                </div>
               </modal>
             </div>
             <div class="app add-app" id="app999" @click="show(999)">

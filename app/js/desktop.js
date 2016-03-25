@@ -187,11 +187,13 @@ GCR.init();
 **/
 var modal = VueStrap.modal,
     tooltip = VueStrap.tooltip,
-    dropdown = VueStrap.dropdown;
+    dropdown = VueStrap.dropdown,
+    tabs = VueStrap.tabs;
 // console.log(modal)
 Vue.component('modal',modal);
 Vue.component('tooltip',tooltip);
-Vue.component('dropdown',dropdown)
+Vue.component('dropdown',dropdown);
+Vue.component('tabs',tabs);
 var zindex = 0;
 
 /**
@@ -199,7 +201,106 @@ var zindex = 0;
 **/
 
 var startmenu = new Vue({
-  el:"#usetting"
+  el:"#usetting",
+  data:function(){
+    return {
+      pages:['game','plat','permission','user'],
+      zooms:{
+        'game':false,
+        'plat':false,
+        'permission':false,
+        'user':false
+      },
+      ismax:{
+        'game':false,
+        'plat':false,
+        'permission':false,
+        'user':false
+      },
+      name:{
+        'game':"游戏管理",
+        'plat':"平台管理",
+        'permission':"权限管理",
+        'user':"用户管理"
+      },
+      init_val:{},
+    }
+  },
+  ready:function(){
+    this.target = {
+      'game':$("#game_manage"),
+      'plat':$("#plat_manage"),
+      'permission':$("#permission_manage"),
+      'user':$("#user_manage")
+    };
+    for(var t in this.target){
+      this.target[t].appendTo($("body"));
+    }
+    // $("#plat_manage").appendTo($("body"));
+    $("body .modal .modal-dialog").addClass("dialog-init").resizable();
+    $("body .modal").draggable({handle:'.modal-header'});
+  },
+  methods:{
+    show:function(key){
+      var tstr = "#"+key+"_manage";
+      if(this.zooms[key]){
+        $("#desktop").find("li[data-target='"+key+"_manage']").addClass('flop')
+        setTimeout(function(){
+          $("#desktop").find("li[data-target='"+key+"_manage']").removeClass('flop')
+        },1000)
+        return false;
+      }
+      
+      GCR.modals.show($(tstr));
+      this.zooms[key] = true;
+      zindex++;
+      $(tstr).addClass('in').css("display","block");
+      $(tstr).find(".modal-dialog").css("z-index",zindex);
+    },
+    close:function(key,p){
+      var tstr = "#"+key+"_manage";
+      !p?this.zooms[key] = false:null;
+      !p?zindex--:null;
+      $(tstr).removeClass('in');
+      $(tstr).find(".modal-dialog").css("z-index","");
+      if(p){$(tstr).addClass("maxout");
+        setTimeout(function(){
+          $(tstr).css({"display":"none"});
+        },500)
+      }
+    },
+    min:function(key){
+      var tstr = "#"+key+"_manage";
+      this.close(key,"animate");//与关闭操作相同，并加入到desktop最小化列表中
+      var name = this.name[key];
+      var icon ='app/images/desktop-icons/settings.png';
+      desks.minifys.push({
+        el:$(tstr),
+        target:key+"_manage",
+        index:key,
+        // show:false,
+        name:name,
+        icon:icon,
+      });
+      desks.isflop.push(false);
+      GCR.fishdock();
+    },
+    max:function(key){
+      console.log(this.target)
+      this.ismax[key] = !this.ismax[key];
+      var _target = this.target[key].find(".modal-dialog")[0];
+      if(this.ismax[key]){//经过上述转换以后说明ismax是放大时候的状态，因此，要记录原始的width height left top等
+        this.init_val[key] = {
+          left:_target.offsetLeft,
+          top:_target.offsetTop,
+          width:_target.offsetWidth,
+          height:_target.offsetHeight
+        }
+      }
+      GCR.modals.max(this.ismax[key],this.target[key].find(".modal-dialog"),this.init_val[key]);
+      
+    }
+  }
 })
 
 /**
@@ -263,39 +364,6 @@ var rkmodal = new Vue({
     }
   }
 })
-
-// var app = new Vue({
-//   el:"#app1",
-//   data:function(){
-//     return {
-//       zoomModal:false
-//     }
-//   },
-//   ready:function(){
-//     $("#appmodal").appendTo($("body"));
-//   },
-//   methods:{
-//     show:function(){
-//       this.zoomModal = true;
-//       // rightkeymenu.removeClass('open')
-//     },
-//     close:function(){
-//       this.zoomModal = false;
-//     },
-//     min:function(){
-
-//     },
-//     max:function(){
-
-//     }
-//   }
-// })
-// console.log(app)
-// app.$watch('zoomModal',function(n,o){
-//   console.log("new",n)
-//   console.log("old",o)
-// })
-
 
 /**
 *加载desktop列表

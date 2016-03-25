@@ -292,7 +292,7 @@ jQuery.iFisheye = {
                     this.style.width = el.fisheyeCfg.itemWidth + extraWidth + 'px';
                     this.style.height = this.style.width;
                     this.style.left = el.fisheyeCfg.itemWidth * nr + toAdd + 'px';
-                    this.style.marginTop = '-'+((el.fisheyeCfg.itemWidth + extraWidth)/2)+'px';
+                    this.style.marginTop = '-'+(( extraWidth)/2)+'px';
                     // this.style.marginBottom = (el.fisheyeCfg.itemWidth + extraWidth)/2+'px';
 
                     toAdd += extraWidth
@@ -350,6 +350,7 @@ $.fn.draggable = function(options){
       y = e.clientY - t.find(".modal-dialog")[0].offsetTop;
       $("body").mousemove(function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
             t.addClass('Moving')
+            $(this).addClass('unselection');
             _that.bind('selectstart',function(){return false;});
             t.find(".modal-dialog").css("position","absolute");
             var _x = ev.clientX - x;//获得X轴方向移动的值
@@ -364,6 +365,7 @@ $.fn.draggable = function(options){
 
   $("body").mouseup(function(){
         $(this).unbind("mousemove");
+        $(this).removeClass('unselection');
         if(t){
             t.removeClass("Moving")
             if(t.hasClass('modal')){
@@ -404,6 +406,7 @@ $.fn.resizable = function(argument) {
      var wx = target[0].getBoundingClientRect().left;
      var height = target[0].offsetHeight;
       $("body").bind("mousemove",function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
+          $(this).addClass('unselection');
           t.bind('selectstart',function(){return false;});
           var _x = ev.clientX-wx;
           target.css({"width":_x+"px",height:height+"px"});
@@ -428,6 +431,7 @@ $.fn.resizable = function(argument) {
      var width = target[0].offsetWidth;
      var height = target[0].offsetHeight;
       $("body").bind("mousemove",function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
+          $(this).addClass('unselection');
           t.bind('selectstart',function(){return false;});
           console.log("----"+l)
           var _y = ev.clientY - wy;//获得Y轴方向移动的值
@@ -451,6 +455,7 @@ $.fn.resizable = function(argument) {
      var wx = target[0].getBoundingClientRect().left;
      var wy = target[0].getBoundingClientRect().top;
       $("body").bind("mousemove",function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
+          $(this).addClass('unselection');
           t.bind('selectstart',function(){return false;});
           var _x = ev.clientX - wx;//获得X轴方向移动的值
           var _y = ev.clientY - wy;//获得Y轴方向移动的值
@@ -462,6 +467,7 @@ $.fn.resizable = function(argument) {
 
   $("body").mouseup(function(){
     if(flag){
+      $(this).removeClass('unselection');
         // target.addClass("dialog-init");
       $(this).unbind("mousemove");
       flag = false;
