@@ -114,7 +114,7 @@ window.GCR = {
             marginLeft:($("body")[0].clientWidth-sidebar[0].clientWidth)/2
           })
           $('#dock').Fisheye({
-            maxWidth: 18,
+            maxWidth: 35,
             items: 'li',
             // itemsText: 'span',
             container: '.centerd',
@@ -315,7 +315,8 @@ var desks = new Vue({
         {name:"safari",icon:"app/images/desktop-icons/safari_ios7_ios_7.png"},
         {name:"weather",icon:"app/images/desktop-icons/weather_ios7_ios_7.png"}
       ],
-      minifys:[]
+      minifys:[],
+      isflop:[]//数组个数与minifys相等
     }
   },
   ready:function(){
@@ -328,6 +329,7 @@ var desks = new Vue({
         item.el.css("display","block");
         item.el.addClass('in').addClass("maxin").removeClass("maxout");
         this.minifys.splice(this.minifys.indexOf(item),1);
+        this.isflop.splice(this.minifys.indexOf(item),1)
 
         console.log(this.minifys)
       // }
@@ -371,14 +373,35 @@ var apps = new Vue({
   methods:{
     show:function(index){
       if(index==999){
-        if(this.zoomadd)return false;
+        if(this.zoomadd){
+          $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop')
+          setTimeout(function(){
+            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop')
+          },1000)
+          return false;
+          return false;
+        }
         GCR.modals.show($("#appmodal999"));
         this.zoomadd = true;
         zindex++;
         $("#appmodal999").addClass('in').css("display","block");
         $("#appmodal999").find(".modal-dialog").css("z-index",zindex);
       }else{
-        if(this.zooms[index])return false;
+        if(this.zooms[index]){
+          // for(var i =0;i<desks.minifys.length;i++){
+          //   if(index==desks.minifys[i].index){
+          //     desks.isflop[i] = true;
+          //     break;
+          //   }
+          // }
+          $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop')
+          setTimeout(function(){
+            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop')
+          },1000)
+          return false;
+        }
+        
+
         GCR.modals.show($("#appmodal"+index));
         this.zooms[index] = true;
         zindex++;
@@ -415,11 +438,13 @@ var apps = new Vue({
       var icon = index==999?'app/images/desktop-icons/folder-document.png':this.apps[index].icon;
       desks.minifys.push({
         el:$("#appmodal"+index),
+        target:"appmodal"+index,
         index:index,
         // show:false,
         name:name,
-        icon:icon
+        icon:icon,
       });
+      desks.isflop.push(false);
       GCR.fishdock();
     },
     max:function(index){
