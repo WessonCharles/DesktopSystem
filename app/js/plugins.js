@@ -334,12 +334,12 @@ $.fn.draggable = function(options){
   var t,zindex;
   target.hover(function(){$(this).css("cursor","move");},function(){$(this).css("cursor","default");})
   var x,y,flag = false;
-  _that.mousedown(function(){
+  _that.find('.modal-dialog').mousedown(function(){
     var t = $(this);
-    if(t.find('.modal-dialog').hasClass('maxty'))return false;
-    if(t.find(".modal-dialog").css("z-index")<2000){
+    if(t.hasClass('maxty'))return false;
+    if(t.css("z-index")<2000){
         $(".modal").find(".modal-dialog").css("z-index",0)
-        t.find(".modal-dialog").css("z-index",2000);
+        t.css("z-index",2000);
     }
   })
   target.mousedown(function(e){//e鼠标事件
@@ -356,7 +356,7 @@ $.fn.draggable = function(options){
             var _x = ev.clientX - x;//获得X轴方向移动的值
             var _y = ev.clientY - y;//获得Y轴方向移动的值
             if(t.hasClass('modal')){
-              t.find(".modal-dialog").css({'opacity':'0.3','left':_x+"px",'top':(_y-20)+"px",'z-index':2000})
+              t.find(".modal-dialog").css({'opacity':'0.3','left':_x+"px",'top':(_y-70)+"px",'z-index':2000})
             }else{
               t.css({'left':_x+"px",'top':_y+"px"});
             }

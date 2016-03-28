@@ -29,48 +29,60 @@ window.GCR = {
     baseHandle:function(){
       var _this = this;
       var rightkeymenu = $("#rightkey");
-          ci_item = $("#app .containers .bottom_tip .ci_item"),
+          ci_item = $("#app .bottom_tip .ci_item"),
           arrows_left = $("#app .containers .arrows_left"),
           arrows_right = $("#app .containers .arrows_right"),
           citems = $("#app .containers .container_item"),
-          current_con = $("#app .containers .bottom_tip .current_con"),
+          current_con = $("#app .bottom_tip .current_con"),
           contaniers = $("#app .containers");
 
-      $("#modaltest").click(function(){
-        event.stopPropagation();
-        // $("#myModal").modal({backdrop: 'static'});
-        rightkeymenu.removeClass('open');
-      })
-
+      // $("#modaltest").click(function(){
+      //   event.stopPropagation();
+      //   // $("#myModal").modal({backdrop: 'static'});
+      //   rightkeymenu.removeClass('open');
+      // })
+      /**
+      *顶部标签切换
+      **/
       ci_item.click(function(){
            var idx = $(this).index();
           _this.switchpage(idx);
       })
-
+      /**
+      *向左侧滑动按钮
+      **/
       arrows_left.click(function(){
-        var curcon = $("#app .containers .bottom_tip .current_con");
+        var curcon = $("#app .bottom_tip .current_con");
         var index = curcon.index();
         if((index-1)>-1){
           _this.switchpage(index-1);
         }
       })
+      /**
+      *向右侧滑动按钮
+      **/
       arrows_right.click(function(){
-        var curcon = $("#app .containers .bottom_tip .current_con");
+        var curcon = $("#app .bottom_tip .current_con");
         var index = curcon.index();
         if((index+1)<citems.length){
           _this.switchpage(index+1);
         }
       })
 
+      /**
+      *改变窗口大小时，动态更改左边距和dock栏的位置，做适应
+      **/
       $(window).resize(function(){
-          var index = $("#app .containers .bottom_tip .current_con").index();
+          var index = $("#app .bottom_tip .current_con").index();
           var box = $("#app .containers .container_items"),
           w = $("#app .containers")[0].offsetWidth;
           box.css({"margin-left":"-"+w*index+"px"})
           _this.fishdock();
       })
 
-
+      /**
+      *鼠标在页面左侧时，显示向左滑动按钮，反之显示向右滑动按钮
+      **/
       $("#app").mousemove(function(e){
         if(e.pageX<500){
           arrows_left.css("display","block");
@@ -94,8 +106,7 @@ window.GCR = {
       };
       var isIE = navigator.appName;
       //判断是否是IE浏览器
-      // if(isIE=="Microsoft Internet Explorer"){
-      //添加IE右击事件
+      //添加右击事件
       $("#app").bind("mousedown",function (event){
         // rightkeymenu.removeClass('open')
         if(event.which==3&&$(event.target).parents(".app").length==0&&!$(event.target).hasClass('app')){
@@ -140,16 +151,23 @@ window.GCR = {
       });
     },
     switchpage:function(idx){
-      var cis = $("#app .containers .bottom_tip .ci_item"),
+      /**
+      *切换页面
+      **/
+      var cis = $("#app .bottom_tip .ci_item"),
       box = $("#app .containers .container_items"),
       w = $("#app .containers")[0].offsetWidth;
       if(parseInt(box.css("margin-left"))!=w*idx){
         box.css({"margin-left":"-"+w*idx+"px"})
       }
-      $("#app .containers .bottom_tip .current_con").removeClass('current_con');
-      $("#app .containers .bottom_tip .ci_item").eq(idx).addClass('current_con');
+      $("#app .bottom_tip .current_con").removeClass('current_con');
+      $("#app .bottom_tip .ci_item").eq(idx).addClass('current_con');
     },
     modals:{
+      ready:function(){
+        $("body .modal .modal-dialog").addClass("dialog-init").resizable();
+        $("body .modal").draggable({handle:'.modal-header'});
+      },
       show:function(it){
         var modals = $(".modal");
         console.log(modals)
@@ -161,11 +179,12 @@ window.GCR = {
         console.log(it.find(".modal-dialog")[0].offsetWidth)
         var l = ($(window).width())/3,
         t = ($(window).height())/2-it.find(".modal-dialog")[0].offsetHeight;
-
-        it.find(".modal-dialog").css({
-          left:l+"px",
-          top:t+"px"
-        })
+        if(it.find(".modal-dialog")[0].offsetWidth==0){
+          it.find(".modal-dialog").css({
+            left:l+"px",
+            top:t+"px"
+          })
+        }
       },
       hide:function(){
         it = false;
@@ -237,8 +256,7 @@ var startmenu = new Vue({
       this.target[t].appendTo($("body"));
     }
     // $("#plat_manage").appendTo($("body"));
-    $("body .modal .modal-dialog").addClass("dialog-init").resizable();
-    $("body .modal").draggable({handle:'.modal-header'});
+    GCR.modals.ready();
   },
   methods:{
     show:function(key){
@@ -323,8 +341,7 @@ var rkmodal = new Vue({
   ready:function(){
     $("#realrightmodal").appendTo($("body"));
     this['target'] = $("#realrightmodal").find(".modal-dialog");
-    $("body .modal .modal-dialog").addClass("dialog-init").resizable();
-    $("body .modal").draggable({handle:'.modal-header'});
+    GCR.modals.ready();
   },
   methods:{
     show:function(){
@@ -366,46 +383,6 @@ var rkmodal = new Vue({
 })
 
 /**
-*加载desktop列表
-**/
-
-var desks = new Vue({
-  el:"#desktop",
-  data:function(){
-    return {
-      apps:[
-        {name:"app_store",icon:"app/images/desktop-icons/app_store_ios7_ios_7.png"},
-        {name:"calendar",icon:"app/images/desktop-icons/calendar_ios7_ios_7.png"},
-        {name:"camera",icon:"app/images/desktop-icons/camera_ios7_ios_7.png"},
-        {name:"music",icon:"app/images/desktop-icons/music_ios7_ios_7.png"},
-        {name:"phone",icon:"app/images/desktop-icons/phone_ios7_ios_7.png"},
-        {name:"photos",icon:"app/images/desktop-icons/photos_ios7_ios_7.png"},
-        {name:"safari",icon:"app/images/desktop-icons/safari_ios7_ios_7.png"},
-        {name:"weather",icon:"app/images/desktop-icons/weather_ios7_ios_7.png"}
-      ],
-      minifys:[],
-      isflop:[]//数组个数与minifys相等
-    }
-  },
-  ready:function(){
-
-  },
-  methods:{
-    toggleMin:function(item){
-      // if(item.show){
-        GCR.fishdock();
-        item.el.css("display","block");
-        item.el.addClass('in').addClass("maxin").removeClass("maxout");
-        this.minifys.splice(this.minifys.indexOf(item),1);
-        this.isflop.splice(this.minifys.indexOf(item),1)
-
-        console.log(this.minifys)
-      // }
-    }
-  }
-})
-
-/**
 *实例化apps的modal
 **/
 var apps = new Vue({
@@ -435,8 +412,7 @@ var apps = new Vue({
     }
     this.targetadd = $("#appmodal999").find(".modal-dialog");
     $("#appmodal999").appendTo($("body"))
-    $("body .modal .modal-dialog").addClass("dialog-init").resizable();
-    $("body .modal").draggable({handle:'.modal-header'});
+    GCR.modals.ready();
   },
   methods:{
     show:function(index){
@@ -446,7 +422,6 @@ var apps = new Vue({
           setTimeout(function(){
             $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop')
           },1000)
-          return false;
           return false;
         }
         GCR.modals.show($("#appmodal999"));
@@ -549,7 +524,45 @@ var apps = new Vue({
   }
 })
 
+/**
+*加载desktop列表
+**/
 
+var desks = new Vue({
+  el:"#desktop",
+  data:function(){
+    return {
+      apps:[
+        {name:"app_store",icon:"app/images/desktop-icons/app_store_ios7_ios_7.png"},
+        {name:"calendar",icon:"app/images/desktop-icons/calendar_ios7_ios_7.png"},
+        {name:"camera",icon:"app/images/desktop-icons/camera_ios7_ios_7.png"},
+        {name:"music",icon:"app/images/desktop-icons/music_ios7_ios_7.png"},
+        {name:"phone",icon:"app/images/desktop-icons/phone_ios7_ios_7.png"},
+        {name:"photos",icon:"app/images/desktop-icons/photos_ios7_ios_7.png"},
+        {name:"safari",icon:"app/images/desktop-icons/safari_ios7_ios_7.png"},
+        {name:"weather",icon:"app/images/desktop-icons/weather_ios7_ios_7.png"}
+      ],
+      minifys:[],
+      isflop:[]//数组个数与minifys相等
+    }
+  },
+  ready:function(){
+
+  },
+  methods:{
+    toggleMin:function(item){
+      // if(item.show){
+        GCR.fishdock();
+        item.el.css("display","block");
+        item.el.addClass('in').addClass("maxin").removeClass("maxout");
+        this.minifys.splice(this.minifys.indexOf(item),1);
+        this.isflop.splice(this.minifys.indexOf(item),1)
+
+        console.log(this.minifys)
+      // }
+    }
+  }
+})
 
 
 /**

@@ -322,7 +322,7 @@ li.desk-mini span {
  */
 .containers{
     position: absolute;
-    top: 50px;
+    top: 60px;
     left: 10px;
     z-index: 0;
     right: 10px;
@@ -376,11 +376,11 @@ li.desk-mini span {
     height: 80%!important;
     margin:10%!important;
 }
-.containers .bottom_tip{
-    position: absolute;
+#app .bottom_tip{
+    position: fixed;
     left: 50%;
     height: 10px;
-    bottom: 15px;
+    top: 30px;
     padding: 15px;
     z-index: 30;
     -webkit-transform: translateX(-50%) translateY(0);
@@ -572,7 +572,7 @@ li.desk-mini span {
     padding-bottom:41px;
 }
 .modal-body{
-    height:800px;
+    /*height:100%;*/
 }
 .modal-footer{
     position: absolute;
