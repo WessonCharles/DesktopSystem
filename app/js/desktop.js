@@ -10,13 +10,24 @@ window.Interface = {
   },
 
 }
-
 window.GCR = {
     init:function(){
+      this.loadBg();
       this.setip();
       this.setCurrentTime();
       this.baseHandle();
       this.fishdock();
+    },
+    loadBg:function(){
+      var app = $("#app"),
+          bg = window.localStorage.getItem("current-bg-url")||'../imgs/background/background.jpg',
+          cssbg = window.localStorage.getItem("current-bg-url")?window.localStorage.getItem("current-bg-url").replace("app",".."):'../imgs/background/background.jpg';
+      app.css("background","url('"+bg+"') 0 / cover fixed");
+
+      var pseheader = this.ruleSelector(".header::before").slice(-1),
+          pseside = this.ruleSelector(".sidebar::before").slice(-1);
+      pseheader[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
+      pseside[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
     },
     setip:function(){
       var ele = document.getElementById("current_ip");
@@ -119,7 +130,7 @@ window.GCR = {
       });
     },
     fishdock:function(){
-        setTimeout(function(){
+        $(document).ready(function(){
           var sidebar = $("#dock");
           sidebar.css({
             marginLeft:($("body")[0].clientWidth-sidebar[0].clientWidth)/2
@@ -133,7 +144,7 @@ window.GCR = {
             proximity: 100,
             halign : 'center'
           })
-        },1)
+        })
     },
     ruleSelector:function(selector){
       /**
@@ -142,7 +153,7 @@ window.GCR = {
        * @return {[type]}          [description]
        */
       function uni(selector) {
-        return selector.replace(/::/g, ':')
+        return selector&&selector.replace(/::/g, ':')
       }
       return Array.prototype.filter.call(Array.prototype.concat.apply([], Array.prototype.map.call(document.styleSheets, function(x) {
         return Array.prototype.slice.call(x.cssRules);
@@ -207,12 +218,14 @@ GCR.init();
 var modal = VueStrap.modal,
     tooltip = VueStrap.tooltip,
     dropdown = VueStrap.dropdown,
-    tabs = VueStrap.tabs;
-// console.log(modal)
+    tabs = VueStrap.tabs,
+    alert = VueStrap.alert;
+
 Vue.component('modal',modal);
 Vue.component('tooltip',tooltip);
 Vue.component('dropdown',dropdown);
 Vue.component('tabs',tabs);
+Vue.component('alert',alert);
 var zindex = 0;
 
 /**
@@ -322,6 +335,26 @@ var startmenu = new Vue({
 })
 
 /**
+*实例化通知组件
+**/
+var alerts = new Vue({
+  el:"#alerts",
+  data:function(){
+    return {
+      showTop:false,
+      type:'success',
+      label:{
+        'success':'成功',
+        'info':'提示',
+        'danger':'危险',
+        'warning':'警告'
+      },
+      content:''
+    }
+  }
+})
+
+/**
 **实例化右键菜单modal
 **/
 var rkmodal = new Vue({
@@ -335,6 +368,16 @@ var rkmodal = new Vue({
         height:0,
         top:0,
         width:0
+      },
+      //关于背景的一些data
+      bg:{
+        imgs:["app/images/background/background.jpg",
+              "app/images/background/background-1.jpg",
+              "app/images/background/background-2.jpg",
+              "app/images/background/background-3.jpg",
+              "app/images/background/background-4.jpg",
+              "app/images/background/background-5.jpg"],
+        selected:0
       }
     }
   },
@@ -342,6 +385,9 @@ var rkmodal = new Vue({
     $("#realrightmodal").appendTo($("body"));
     this['target'] = $("#realrightmodal").find(".modal-dialog");
     GCR.modals.ready();
+    if(window.localStorage.getItem("current-bg-url")){
+      this.bg.selected = this.bg.imgs.indexOf(window.localStorage.getItem("current-bg-url"));
+    }
   },
   methods:{
     show:function(){
@@ -378,6 +424,22 @@ var rkmodal = new Vue({
         }
       }
       GCR.modals.max(this.ismax,this.target,this.init_val);
+    },
+    setbg:function(index){
+      this.bg.selected = index;
+      var app = $("#app"),
+          bg = this.bg.imgs[index],
+          cssbg = this.bg.imgs[index].replace("app","..");
+          var pseheader = GCR.ruleSelector(".header::before").slice(-1),
+              pseside = GCR.ruleSelector(".sidebar::before").slice(-1);
+          pseheader[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
+          pseside[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
+      // document.styleSheets[0].addRule('.header::before','background: url('+cssbg+') 0 / cover fixed');
+      // document.styleSheets[0].addRule('.sidebar::before','background: url('+cssbg+') 0 / cover fixed');
+      app.css("background","url('"+bg+"') 0 / cover fixed");
+      window.localStorage.setItem("current-bg-url", bg);
+      alerts.$set('content', "修改桌面背景成功");
+      alerts.$set('showTop',true);
     }
   }
 })
@@ -418,10 +480,15 @@ var apps = new Vue({
     show:function(index){
       if(index==999){
         if(this.zoomadd){
-          $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop')
+          var _this = this;
+          $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop');
           setTimeout(function(){
-            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop')
+            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
           },1000)
+          // $("#desktop").find("li[data-target='appmodal"+index+"']")[0].addEventListener("webkitAnimationEnd", function(){ //动画结束时事件 
+          //   $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
+          //  
+          // }, false); 
           return false;
         }
         GCR.modals.show($("#appmodal999"));
@@ -431,16 +498,12 @@ var apps = new Vue({
         $("#appmodal999").find(".modal-dialog").css("z-index",zindex);
       }else{
         if(this.zooms[index]){
-          // for(var i =0;i<desks.minifys.length;i++){
-          //   if(index==desks.minifys[i].index){
-          //     desks.isflop[i] = true;
-          //     break;
-          //   }
-          // }
-          $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop')
+          var _this = this;
+          $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop');
           setTimeout(function(){
-            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop')
+            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
           },1000)
+          
           return false;
         }
         
@@ -563,26 +626,3 @@ var desks = new Vue({
     }
   }
 })
-
-
-/**
- * 可设置#app,.header::before,.sidebar::before的背景图
- * @type {[type]}
- */
-// var pseudo = ruleSelector("header::before").slice(-1);
-// pseudo.forEach(function(rule){
-//   rule.style.background = "some pic";
-// })
-
-/**
- * 点击下方tip切换页面
- */
-
-
-
-
-
-
-
-
-

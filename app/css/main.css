@@ -24,17 +24,28 @@ a{
     cursor: pointer;
 }
 #app{
-    background: url("../images/background.jpg") 0 / cover fixed;
+    background: url("../images/background/background.jpg") 0 / cover fixed;
 }
 .header::before{
     /*background-color: #fff;*/
-    background: url("../images/background.jpg") 0 10% / cover fixed;
+    background: url("../images/background/background.jpg") 0 10% / cover fixed;
     background-attachment: inherit;
     opacity: 0.4;
 }
 .sidebar::before{
-	background: url("../images/background.jpg") 0 / cover fixed;
+	background: url("../images/background/background.jpg") 0 / cover fixed;
     background-attachment: inherit;
+}
+.background-select img{
+    width:150px;
+}
+.background-select .selected{
+    background-color: #217DEB;
+}
+.background-select .selected:before{
+    position: absolute;
+    width:100%;
+    height: 100%;
 }
 /**
  * 整个页面
@@ -48,7 +59,10 @@ a{
     left: 0;
     right: 0;
     bottom: 0;
-    /*padding-top: 50px;*/
+    transition: background 1s;
+    -moz-transition: background 1s; 
+    -webkit-transition: background 1s; 
+    -o-transition: background 1s;
 }
 /**
  * 头
@@ -652,9 +666,33 @@ li.desk-mini span {
 .maxify{
     background-color: rgb(54,205,64);
 }
-.close{
+.modal-header .close{
     background-color: rgb(253,89,89)!important;
     opacity: 1!important;
+}
+.alert{
+    background-color: rgba(1,1,1,0.8)!important;
+    border-color: rgb(1,1,1)!important;
+    color:rgba(255,255,255,0.8);
+    margin-right: -30px;
+    margin-top: 15px;
+    z-index: 2500!important;
+}
+.alert.alert-success .glyphicon{
+    color:rgb(54,205,64);
+}
+.alert.alert-danger .glyphicon{
+    color:rgb(253,89,89);
+}
+.alert.alert-info .glyphicon{
+    color:rgb(213,213,213);
+}
+.alert.alert-warning .glyphicon{
+    color:rgb(254,191,49);
+}
+.alert .close{
+    color:#fff;
+    opacity: 0.6;
 }
 modal{
     display: none;

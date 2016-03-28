@@ -16,11 +16,12 @@
     <script src="bower_components/vue-strap/dist/vue-strap.min.js"></script>
   </head>
   <body>
+    <!--右键-->
     <div class="btn-group" id="rightkey">
       <ul class="dropdown-menu">
         <li id="rightmodal">
-          <a @click="show">modal测试</a>
-          <modal id="realrightmodal" :show.sync="zoomModal" effect="zoom">
+          <a @click="show">桌面背景</a>
+          <modal id="realrightmodal" :show.sync="zoomModal" effect="zoom" class="nofoot">
             <div slot="modal-header" class="modal-header">
               <button type="button" class="modal-btn close" @click="close" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
               <button type="button" class="modal-btn maxify" @click="max"><span  v-if='!ismax' class="glyphicon glyphicon-unchecked"></span>
@@ -30,10 +31,12 @@
                 <b>设置背景图片</b>
               </h4>
             </div>
-            <div slot="modal-body" class="modal-body">...</div>
+            <div slot="modal-body" class="modal-body background-select">
+              <img v-bind:src="im" v-for="im in bg.imgs" alt="..." v-bind:class="[bg.selected==$index?'selected':'']" class="img-thumbnail img-responsive" @click="setbg($index)"/>
+            </div>
             <!-- <div slot="modal-footer" class="modal-footer">
-              <button type="button" class="btn btn-default" @click='showCustomModal = false'>Exit</button>
-              <button type="button" class="btn btn-success" @click='showCustomModal = false'>Custom Save</button>
+              <button type="button" class="btn btn-default" @click='close'>取消</button>
+              <button type="button" class="btn btn-success" @click='changebg'>保存</button>
             </div> -->
           </modal>
         </li>
@@ -53,6 +56,24 @@
         <li><a href="#">右键功能测试</a></li>
       </ul>
     </div>
+    <!--alert-->
+    <div class="alerts" id="alerts">
+      <alert
+        :show.sync="showTop"
+        :duration="3000"
+        v-bind:type="type"
+        width="400px"
+        placement="top-right"
+        dismissable>
+        <span class="glyphicon glyphicon-ok-sign" v-if="type=='success'"></span>
+        <span class="glyphicon glyphicon-question-sign" v-if="type=='warning'"></span>
+        <span class="glyphicon glyphicon-info-sign" v-if="type=='info'"></span>
+        <span class="glyphicon glyphicon-exclamation-sign" v-if="type=='danger'"></span>
+        <strong>{{label[type]}}</strong>
+        <p>{{content}}</p>
+      </alert>
+    </div>
+    <!--app主页面-->
     <div id="app">
       <!--顶部开始菜单栏-->
       <div class="header">
