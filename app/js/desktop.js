@@ -130,7 +130,8 @@ window.GCR = {
       });
     },
     fishdock:function(){
-        $(document).ready(function(){
+        // $(document).ready(function(){
+        setTimeout(function(){
           var sidebar = $("#dock");
           sidebar.css({
             marginLeft:($("body")[0].clientWidth-sidebar[0].clientWidth)/2
@@ -144,7 +145,7 @@ window.GCR = {
             proximity: 100,
             halign : 'center'
           })
-        })
+        },0)
     },
     ruleSelector:function(selector){
       /**
@@ -277,7 +278,8 @@ var startmenu = new Vue({
       if(this.zooms[key]){
         $("#desktop").find("li[data-target='"+key+"_manage']").addClass('flop')
         setTimeout(function(){
-          $("#desktop").find("li[data-target='"+key+"_manage']").removeClass('flop')
+          $("#desktop").find("li[data-target='"+key+"_manage']").removeClass('flop');
+          desks.toggleMin(key+"_manage",true);
         },1000)
         return false;
       }
@@ -396,7 +398,17 @@ var rkmodal = new Vue({
   },
   methods:{
     show:function(){
-      if(this.zoomModal) return false;
+      if(this.zoomModal){
+        var _this = this;
+        $("#desktop").find("li[data-target='realrightmodal']").addClass('flop');
+        setTimeout(function(){
+          $("#desktop").find("li[data-target='realrightmodal']").removeClass('flop');
+          this.zoomModal = true;
+          desks.toggleMin("realrightmodal",true);
+        },1000)
+        
+        return false;
+      } 
       GCR.modals.show($("#realrightmodal"));
       this.zoomModal = true;
       zindex++;
@@ -412,6 +424,7 @@ var rkmodal = new Vue({
       $("#realrightmodal").removeClass('in').addClass("maxout");//与关闭操作相同，并加入到desktop最小化列表中
       desks.minifys.push({
         el:$("#realrightmodal"),
+        target:'realrightmodal',
         // show:false,
         name:$("#realrightmodal").find(".modal-title").text(),
         icon:'app/images/desktop-icons/folder-document.png'
@@ -489,11 +502,10 @@ var apps = new Vue({
           $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop');
           setTimeout(function(){
             $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
+            this.zoomadd = true;
+            desks.toggleMin("appmodal"+index,true);
           },1000)
-          // $("#desktop").find("li[data-target='appmodal"+index+"']")[0].addEventListener("webkitAnimationEnd", function(){ //动画结束时事件 
-          //   $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
-          //  
-          // }, false); 
+          
           return false;
         }
         GCR.modals.show($("#appmodal999"));
@@ -507,8 +519,8 @@ var apps = new Vue({
           $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop');
           setTimeout(function(){
             $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
+            desks.toggleMin("appmodal"+index,true);
           },1000)
-          
           return false;
         }
         
@@ -618,13 +630,29 @@ var desks = new Vue({
 
   },
   methods:{
-    toggleMin:function(item){
+    toggleMin:function(item,trigger){
       // if(item.show){
         GCR.fishdock();
-        item.el.css("display","block");
-        item.el.addClass('in').addClass("maxin").removeClass("maxout");
-        this.minifys.splice(this.minifys.indexOf(item),1);
-        this.isflop.splice(this.minifys.indexOf(item),1)
+        var el = trigger?item:item.el;
+        
+        if(trigger){
+          for(var i=0;i<this.minifys.length;i++){
+            if(this.minifys[i].target==item){
+              this.minifys[i].el.css("display","block");
+              this.minifys[i].el.addClass('in').addClass("maxin").removeClass("maxout");
+              this.minifys.splice(i,1);
+              this.isflop.splice(i,1);
+              break;
+            }
+          }
+          
+        }else{
+         item.el.css("display","block");
+         item.el.addClass('in').addClass("maxin").removeClass("maxout");
+         this.minifys.splice(this.minifys.indexOf(item),1);
+         this.isflop.splice(this.minifys.indexOf(item),1)
+        }
+        
 
         console.log(this.minifys)
       // }

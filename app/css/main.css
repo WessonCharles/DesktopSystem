@@ -449,6 +449,12 @@ li.desk-mini span {
   -webkit-transition: display 1.2s; 
   -o-transition: display 1.2s;
 }
+.modal-dialog{
+      transition: display 1.2s;
+    -moz-transition: display 1.2s; 
+    -webkit-transition: display 1.2s; 
+    -o-transition: display 1.2s;
+}
 .modal.maxin .modal-dialog{
     animation:maxin 0.5s 1;
     -webkit-animation:maxin 0.5s 1;
