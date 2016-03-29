@@ -24,20 +24,30 @@ a{
     cursor: pointer;
 }
 #app{
-    background: url("../images/background/background.jpg") 0 / cover fixed;
+    background: url("../images/background/background.jpg") 50% / cover fixed;
 }
 .header::before{
     /*background-color: #fff;*/
-    background: url("../images/background/background.jpg") 0 10% / cover fixed;
+    background: url("../images/background/background.jpg") 50% / cover fixed;
     background-attachment: inherit;
     opacity: 0.4;
 }
 .sidebar::before{
-	background: url("../images/background/background.jpg") 0 / cover fixed;
+	background: url("../images/background/background.jpg") 50% / cover fixed;
     background-attachment: inherit;
+}
+/*.dropdown-menu::before,li.menu ul::before{
+    background: url("../images/background/background.jpg") 0 10% / cover fixed;
+    background-attachment: inherit;
+    z-index: -1!important;
+}*/
+.dropdown-menu{
+    border-radius: 1px;
 }
 .background-select img{
     width:150px;
+    margin: 5px 18px;
+    border: 1px solid #aaa;
 }
 .background-select .selected{
     background-color: #217DEB;
@@ -136,7 +146,7 @@ a{
 }
 li.menu ul{
     background: #fafafa;
-    border-radius: 4px;
+    border-radius: 1px;
     border: 1px solid #ddd;
     border-bottom: 1px solid #d2d2d2;
     box-shadow: inset 0px 1px 2px #fff;
@@ -256,9 +266,8 @@ li.desk-mini span {
 }
 .header::before,.sidebar::before{
 	content: '';
-    /*display: inline-block;*/
-    /*height:100%;*/
-    /*vertical-align: middle;*/
+    display: inline-block;
+    vertical-align: middle;
     position: absolute;
     top: 0;
     z-index: 0;
@@ -336,7 +345,7 @@ li.desk-mini span {
  */
 .containers{
     position: absolute;
-    top: 60px;
+    top: 48px;
     left: 10px;
     z-index: 0;
     right: 10px;
@@ -385,6 +394,14 @@ li.desk-mini span {
     height:90%;
     margin:5%;
 }
+.container_item .app span{
+    display: block;
+    width: 80%;
+    margin: -10px auto;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 5px;
+    color: rgba(255,255,255,0.7);
+}
 .add-app img{
     width:80%!important;
     height: 80%!important;
@@ -394,7 +411,7 @@ li.desk-mini span {
     position: fixed;
     left: 50%;
     height: 10px;
-    top: 30px;
+    top: 40px;
     padding: 15px;
     z-index: 30;
     -webkit-transform: translateX(-50%) translateY(0);

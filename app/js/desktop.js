@@ -22,12 +22,12 @@ window.GCR = {
       var app = $("#app"),
           bg = window.localStorage.getItem("current-bg-url")||'../imgs/background/background.jpg',
           cssbg = window.localStorage.getItem("current-bg-url")?window.localStorage.getItem("current-bg-url").replace("app",".."):'../imgs/background/background.jpg';
-      app.css("background","url('"+bg+"') 0 / cover fixed");
+      app.css("background","url('"+bg+"') 50% / cover fixed");
 
       var pseheader = this.ruleSelector(".header::before").slice(-1),
           pseside = this.ruleSelector(".sidebar::before").slice(-1);
-      pseheader[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
-      pseside[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
+      pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
+      pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
     },
     setip:function(){
       var ele = document.getElementById("current_ip");
@@ -376,7 +376,12 @@ var rkmodal = new Vue({
               "app/images/background/background-2.jpg",
               "app/images/background/background-3.jpg",
               "app/images/background/background-4.jpg",
-              "app/images/background/background-5.jpg"],
+              "app/images/background/background-5.jpg",
+              "app/images/background/background-6.jpg",
+              "app/images/background/background-7.jpg",
+              "app/images/background/background-8.jpg",
+              "app/images/background/background-9.jpg",
+              "app/images/background/background-10.jpg"],
         selected:0
       }
     }
@@ -432,11 +437,11 @@ var rkmodal = new Vue({
           cssbg = this.bg.imgs[index].replace("app","..");
           var pseheader = GCR.ruleSelector(".header::before").slice(-1),
               pseside = GCR.ruleSelector(".sidebar::before").slice(-1);
-          pseheader[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
-          pseside[0].style.background = "url('"+cssbg+"') 0 / cover fixed";
+          pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
+          pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
       // document.styleSheets[0].addRule('.header::before','background: url('+cssbg+') 0 / cover fixed');
       // document.styleSheets[0].addRule('.sidebar::before','background: url('+cssbg+') 0 / cover fixed');
-      app.css("background","url('"+bg+"') 0 / cover fixed");
+      app.css("background","url('"+bg+"') 50% / cover fixed");
       window.localStorage.setItem("current-bg-url", bg);
       alerts.$set('content', "修改桌面背景成功");
       alerts.$set('showTop',true);
