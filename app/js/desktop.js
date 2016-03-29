@@ -20,8 +20,8 @@ window.GCR = {
     },
     loadBg:function(){
       var app = $("#app"),
-          bg = window.localStorage.getItem("current-bg-url")||'../imgs/background/background.jpg',
-          cssbg = window.localStorage.getItem("current-bg-url")?window.localStorage.getItem("current-bg-url").replace("app",".."):'../imgs/background/background.jpg';
+          bg = window.localStorage.getItem("current-bg-url")||'app/images/background/background.jpg',
+          cssbg = window.localStorage.getItem("current-bg-url")?window.localStorage.getItem("current-bg-url").replace("app",".."):'../images/background/background.jpg';
       app.css("background","url('"+bg+"') 50% / cover fixed");
 
       var pseheader = this.ruleSelector(".header::before").slice(-1),
@@ -202,9 +202,7 @@ window.GCR = {
         it = false;
       },
       max:function(flag,el,initval){
-        flag?el.addClass("maxty"):(el.removeClass('maxty')&&!(function(){
-          el.css(initval)
-        }));
+        flag?el.addClass("maxty"):el.removeClass('maxty');
       },
       min:function(){
 
@@ -415,13 +413,19 @@ var rkmodal = new Vue({
       $("#realrightmodal .modal-dialog").css("z-index",zindex);
       // rightkeymenu.removeClass('open')
     },
-    close:function(){
-      this.zoomModal = false;
-      zindex--;
+    close:function(p){
+      !p?this.zoomadd = false:null;
+      !p?zindex--:null;
+      $("#realrightmodal").removeClass('in');
       $("#realrightmodal .modal-dialog").css("z-index","");
+      if(p){$("#realrightmodal").addClass("maxout");
+        setTimeout(function(){
+          $("#realrightmodal").css({"display":"none"});
+        },500)
+      }
     },
     min:function(){
-      $("#realrightmodal").removeClass('in').addClass("maxout");//与关闭操作相同，并加入到desktop最小化列表中
+      this.close(true);//与关闭操作相同，并加入到desktop最小化列表中
       desks.minifys.push({
         el:$("#realrightmodal"),
         target:'realrightmodal',
@@ -452,8 +456,6 @@ var rkmodal = new Vue({
               pseside = GCR.ruleSelector(".sidebar::before").slice(-1);
           pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
           pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
-      // document.styleSheets[0].addRule('.header::before','background: url('+cssbg+') 0 / cover fixed');
-      // document.styleSheets[0].addRule('.sidebar::before','background: url('+cssbg+') 0 / cover fixed');
       app.css("background","url('"+bg+"') 50% / cover fixed");
       window.localStorage.setItem("current-bg-url", bg);
       alerts.$set('content', "修改桌面背景成功");
@@ -535,24 +537,16 @@ var apps = new Vue({
     close:function(index,p){
       if(index==999){
         !p?this.zoomadd = false:null;
-        !p?zindex--:null;
-        $("#appmodal999").removeClass('in');
-        $("#appmodal999").find(".modal-dialog").css("z-index","");
-        if(p){$("#appmodal999").addClass("maxout");
-          setTimeout(function(){
-            $("#appmodal999").css({"display":"none"});
-          },500)
-        }
       }else{
         !p?this.zooms[index] = false:null;
-        !p?zindex--:null;
-        $("#appmodal"+index).removeClass('in');
-        $("#appmodal"+index).find(".modal-dialog").css("z-index","");
-        if(p){$("#appmodal"+index).addClass("maxout");
-          setTimeout(function(){
-            $("#appmodal"+index).css({"display":"none"});
-          },500)
-        }
+      }
+      !p?zindex--:null;
+      $("#appmodal"+index).removeClass('in');
+      $("#appmodal"+index).find(".modal-dialog").css("z-index","");
+      if(p){$("#appmodal"+index).addClass("maxout");
+        setTimeout(function(){
+          $("#appmodal"+index).css({"display":"none"});
+        },500)
       }
     },
     min:function(index){
