@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
-    <meta charset="utf8">
-    <title>React Game Cmdb</title>
+    <meta charset="utf-8">
+    <title>云游戏</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="app/css/animate.css">
     <link rel="stylesheet" type="text/css" href="app/css/mac.css">
     <link rel="stylesheet" href="app/css/main.css">
     <style>
@@ -16,7 +17,7 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="app/js/plugins.js"></script>
     <script src="bower_components/vue/dist/vue.min.js"></script>
-    <script src="bower_components/vue-strap/dist/vue-strap.min.js"></script>
+    <script src="bower_components/vue-strap/dist/vue-strap.js"></script>
   </head>
   <body>
     <!--右键-->
@@ -76,296 +77,248 @@
         <p>{{content}}</p>
       </alert>
     </div>
-    <!--app主页面-->
     <div id="app">
-      <!--顶部开始菜单栏-->
-      <div class="header">
-        <div class="user-logo">
-          <i class="glyphicon glyphicon-user"></i>
-        </div>
-        <div class="header-menu">
-          <div class="right-menu">
-              <div class="input-group">
-                 <!-- <input type="text" name="start" class="form-control" data-date-format="yyyy-mm-dd hh:ii"> -->
-                <div class="input-group-addon"><span id="current_date"></span><i style="margin-left:10px" class="glyphicon glyphicon-calendar"></i>  
-                </div>
+      <div id="login">
+        <div class="login"  v-if="!islogin">
+          <div class="admin-form">
+              <div class="row">
+                  <div class="widget">
+                      <div class="widget-head">
+                        <span class="glyphicon glyphicon-log-in"></span>登录
+                      </div>
+                      <div class="widget-content">
+                          <form class="form-horizontal">
+                            <!-- Email -->
+                            <div class="form-group">
+                              <label class="control-label col-xs-3" for="inputEmail">邮箱</label>
+                              <div class="col-xs-9">
+                                <input type="text" class="form-control" v-model="form.email" id="inputEmail" placeholder="Email">
+                              </div>
+                            </div>
+                            <!-- Password -->
+                            <div class="form-group">
+                              <label class="control-label col-xs-3" for="inputPassword">密码</label>
+                              <div class="col-xs-9">
+                                <input type="password" class="form-control" v-model="form.password" id="inputPassword" placeholder="Password">
+                              </div>
+                            </div>
+                            <!-- Remember me checkbox and sign in button -->
+                            <div class="form-group">
+                                <div class="col-xs-9 col-xs-offset-3">
+                                  <div class="checkbox">
+                                    <label>
+                                      <input type="checkbox"> 记住我
+                                    </label>
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-9 col-xs-offset-2">
+                              <button type="button" @click="login" class="btn btn-danger">登录</button>
+                              <button type="reset" class="btn btn-default">重置</button>
+                            </div>
+                            <br>
+                          </form>
+                      </div>
+                      <div class="widget-foot">
+                        未注册? <a href="#">点击注册</a>
+                      </div>
+                  </div>
               </div>
           </div>
-          <div class="left-menu" id="usetting">
-            <dropdown>
-              <button type="button" class="btn btn-default dropdown-toggle hundred" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                开始菜单 <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu hundred">
-                <li><a href="#">修改个人设置</a></li>
-                <li><a href="#">我的任务管理(日历管理)</a></li>
-                <li><a href="#">记事本</a></li>
-                <li role="separator" class="divider"></li>
-                <li v-for="p in pages">
-                  <a @click="show(p)">{{name[p]}}</a>
-                  <modal v-bind:id="p+'_manage'" :show.sync="zooms[p]" effect="zoom">
-                    <div slot="modal-header" class="modal-header">
-                      <button type="button" class="modal-btn close" @click="close(p)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
-                      <button type="button" class="modal-btn maxify" @click="max(p)"><span v-if="!ismax[p]" class="glyphicon glyphicon-unchecked"></span>
-                      <span v-if="ismax[p]" class="glyphicon glyphicon-modal-window"></span></button>
-                      <button type="button" class="modal-btn minify" @click="min(p)"><span  class="glyphicon glyphicon-minus"></span></button>
-                      <h4 class="modal-title">
-                        <b>{{name[p]}}</b>
-                      </h4>
-                    </div>
-                    <div slot="modal-body" class="modal-body">
-                      <object style="border:0px" type="text/x-scriptlet" v-bind:data="'app/template/'+p+'-genetor.html'" width=100% height=100%></object>
-                    </div>
-                  </modal>
+        </div>
+      </div>
+      <div id="main">
+        <!--顶部开始菜单栏-->
+        <div class="header">
+          <div class="user-logo">
+            <img src="app/images/avator.png" alt="头像">
+          </div>
+          <div class="header-menu">
+            <div class="right-menu">
+                <div class="input-group">
+                  <div class="input-group-addon"><span id="current_date"></span><i style="margin-left:10px" class="glyphicon glyphicon-calendar"></i>  
+                  </div>
+                </div>
+            </div>
+            <div class="left-menu" id="usetting">
+              <dropdown>
+                <button type="button" class="btn btn-default dropdown-toggle hundred" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  开始菜单 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu hundred">
+                  <li v-for="p in pages">
+                    <a @click="show(p)">{{name[p]}}</a>
+                    <span v-if="p=='note'" role="separator" class="divider"></span>
+                    <modal v-bind:id="p+'_manage'" :show.sync="zooms[p]" effect="zoom">
+                      <div slot="modal-header" class="modal-header">
+                        <button type="button" class="modal-btn close" @click="close(p)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button type="button" class="modal-btn maxify" @click="max(p)"><span v-if="!ismax[p]" class="glyphicon glyphicon-unchecked"></span>
+                        <span v-if="ismax[p]" class="glyphicon glyphicon-modal-window"></span></button>
+                        <button type="button" class="modal-btn minify" @click="min(p)"><span  class="glyphicon glyphicon-minus"></span></button>
+                        <h4 class="modal-title">
+                          <b>{{name[p]}}</b>
+                        </h4>
+                      </div>
+                      <div slot="modal-body" class="modal-body">
+                        <object style="border:0px" type="text/x-scriptlet" v-bind:data="'app/template/'+p+'-genetor.html'" width=100% height=100%></object>
+                      </div>
+                    </modal>
+                  </li>
+                  <!-- <li><a href="#">游戏管理</a></li>
+                  <li><a href="#" @click="show('plat')">平台管理</a>
+                  <modal id="plat_manage" :show.sync="platzoom" effect="zoom">
+                      <div slot="modal-header" class="modal-header">
+                        <button type="button" class="modal-btn close" @click="close()" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button type="button" class="modal-btn maxify" @click="max()"><span v-if="!ismax" class="glyphicon glyphicon-unchecked"></span>
+                        <span v-if="ismax" class="glyphicon glyphicon-modal-window"></span></button>
+                        <button type="button" class="modal-btn minify" @click="min()"><span  class="glyphicon glyphicon-minus"></span></button>
+                        <h4 class="modal-title">
+                          <b>平台管理</b>
+                        </h4>
+                      </div>
+                      <div slot="modal-body" class="modal-body">
+                        <object style="border:0px" type="text/x-scriptlet" data="app/template/plat-genetor.html" width=100% height=100%></object>
+                      </div>
+                    </modal>
+                  </li>
+                  <li><a href="#">权限管理</a></li>
+                  <li><a href="#">用户管理</a></li> -->
+                </ul>
+              </dropdown>
+              <div class="input-group" style="margin-top: -2px;">
+                <div class="input-group-addon">当前用户数（<span class="badge">3</span>）</div>
+              </div>
+              <div class="input-group">
+                <div class="input-group-addon"> 当前登陆IP：<span id="current_ip"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--顶部第二层切换钮-->
+        <div class="bottom_tip">
+          <div class="ci_item current_con"></div>
+          <div class="ci_item"></div>
+          <div class="ci_item"></div>
+          <div class="ci_item"></div>
+        </div>
+        <!--底部Dock-->
+        <div class="dock-outer" id="dock">
+          <div class="sidebar">
+          </div>
+          <div class="centerd">
+              <ul id="desktop">
+                <!--公用app-->
+                <li v-for="item in apps">
+                  <img v-bind:src="item.icon">
                 </li>
-                <!-- <li><a href="#">游戏管理</a></li>
-                <li><a href="#" @click="show('plat')">平台管理</a>
-                <modal id="plat_manage" :show.sync="platzoom" effect="zoom">
-                    <div slot="modal-header" class="modal-header">
-                      <button type="button" class="modal-btn close" @click="close()" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
-                      <button type="button" class="modal-btn maxify" @click="max()"><span v-if="!ismax" class="glyphicon glyphicon-unchecked"></span>
-                      <span v-if="ismax" class="glyphicon glyphicon-modal-window"></span></button>
-                      <button type="button" class="modal-btn minify" @click="min()"><span  class="glyphicon glyphicon-minus"></span></button>
-                      <h4 class="modal-title">
-                        <b>平台管理</b>
-                      </h4>
-                    </div>
-                    <div slot="modal-body" class="modal-body">
-                      <object style="border:0px" type="text/x-scriptlet" data="app/template/plat-genetor.html" width=100% height=100%></object>
-                    </div>
-                  </modal>
+                <!--已打开的app最小化-->
+                <li v-if="minifys.length>0" class="v-cut-line"></li>
+                <li v-for="item in minifys" data-target="{{item.target}}" @click="toggleMin(item)" v-bind:class="{'flop':isflop[$index]}" class="desk-mini">
+                  <tooltip
+                    effect="scale"
+                    placement="top"
+                    v-bind:content="item.name">
+                    <img v-bind:src="item.icon" v-bind:title="item.name">
+                  </tooltip>
+                  <!-- <span>{{item.name}}</span> -->
                 </li>
-                <li><a href="#">权限管理</a></li>
-                <li><a href="#">用户管理</a></li> -->
               </ul>
-            </dropdown>
-            <div class="input-group" style="margin-top: -2px;">
-              <div class="input-group-addon">当前用户数（<span class="badge">3</span>）</div>
-            </div>
-            <div class="input-group">
-              <div class="input-group-addon"> 当前登陆IP：<span id="current_ip"></span></div>
-            </div>
           </div>
         </div>
-      </div>
-      <!--顶部第二层切换钮-->
-      <div class="bottom_tip">
-        <div class="ci_item current_con"></div>
-        <div class="ci_item"></div>
-        <div class="ci_item"></div>
-        <div class="ci_item"></div>
-      </div>
-      <!--底部Dock-->
-      <div class="dock-outer" id="dock">
-        <div class="sidebar">
-        </div>
-        <div class="centerd">
-            <ul id="desktop">
-              <!--公用app-->
-              <li v-for="item in apps">
+        <div class="containers">
+          <div class="arrows">
+            <div class="arrows_left"><i class="glyphicon glyphicon-triangle-left"></i></div>
+            <div class="arrows_right"><i class="glyphicon glyphicon-triangle-right"></i></div>
+          </div>
+          <div class="container_items">
+            <div class="container_item" id="applications">
+              <div class="app" v-for="item in apps" id="app{{$index}}" @click="show($index)">
                 <img v-bind:src="item.icon">
-              </li>
-              <!--已打开的app最小化-->
-              <li v-if="minifys.length>0" class="v-cut-line"></li>
-              <li v-for="item in minifys" data-target="{{item.target}}" @click="toggleMin(item)" v-bind:class="{'flop':isflop[$index]}" class="desk-mini">
-                <tooltip
-                  effect="scale"
-                  placement="top"
-                  v-bind:content="item.name">
-                  <img v-bind:src="item.icon" v-bind:title="item.name">
-                </tooltip>
-                <!-- <span>{{item.name}}</span> -->
-              </li>
-            </ul>
-        </div>
-      </div>
-      <div class="containers">
-        <div class="arrows">
-          <div class="arrows_left"><i class="glyphicon glyphicon-triangle-left"></i></div>
-          <div class="arrows_right"><i class="glyphicon glyphicon-triangle-right"></i></div>
-        </div>
-        <div class="container_items">
-          <div class="container_item" id="applications">
-            <div class="app" v-for="item in apps" id="app{{$index}}" @click="show($index)">
-              <img v-bind:src="item.icon">
-              <span>{{item.name}}</span>
-              <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom"  class="nofoot">
-                <div slot="modal-header" class="modal-header">
-                  <button type="button" class="modal-btn close" @click="close($index)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
-                  <button type="button" class="modal-btn maxify" @click="max($index)"><span v-if="!ismax[$index]" class="glyphicon glyphicon-unchecked"></span>
-                  <span v-if="ismax[$index]" class="glyphicon glyphicon-modal-window"></span></button>
-                  <button type="button" class="modal-btn minify" @click="min($index)"><span  class="glyphicon glyphicon-minus"></span></button>
-                  <h4 class="modal-title">
-                    <b>{{item.name}}</b>
-                  </h4>
-                </div>
-                <div slot="modal-body" class="modal-body">
-                  <object style="border:0px" type="text/x-scriptlet" data="app/template/app-genetor.html" width=100% height=100%></object>
-                </div>
-              </modal>
+                <span>{{item.name}}</span>
+                <modal id="appmodal{{$index}}" :show.sync="zooms[$index]" effect="zoom"  class="nofoot">
+                  <div slot="modal-header" class="modal-header">
+                    <button type="button" class="modal-btn close" @click="close($index)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" class="modal-btn maxify" @click="max($index)"><span v-if="!ismax[$index]" class="glyphicon glyphicon-unchecked"></span>
+                    <span v-if="ismax[$index]" class="glyphicon glyphicon-modal-window"></span></button>
+                    <button type="button" class="modal-btn minify" @click="min($index)"><span  class="glyphicon glyphicon-minus"></span></button>
+                    <h4 class="modal-title">
+                      <b>{{item.name}}</b>
+                    </h4>
+                  </div>
+                  <div slot="modal-body" class="modal-body">
+                    <object style="border:0px" type="text/x-scriptlet" data="app/template/app-genetor.html" width=100% height=100%></object>
+                  </div>
+                </modal>
+              </div>
+              <div class="app add-app" id="app999" @click="show(999)">
+                <img src="app/images/app-icons/add-app1.png">
+                <span>创建应用</span>
+                <modal id="appmodal999" :show.sync="zoomadd" effect="zoom">
+                  <div slot="modal-header" class="modal-header">
+                    <button type="button" class="modal-btn close" @click="close(999)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" class="modal-btn maxify" @click="max(999)"><span v-if="!ismaxadd" class="glyphicon glyphicon-unchecked"></span>
+                    <span v-if="ismaxadd" class="glyphicon glyphicon-modal-window"></span></button>
+                    <button type="button" class="modal-btn minify" @click="min(999)"><span  class="glyphicon glyphicon-minus"></span></button>
+                    <h4 class="modal-title">
+                      <b>增加游戏</b>
+                    </h4>
+                  </div>
+                  <div slot="modal-body" class="modal-body">
+                    <object style="border:0px" type="text/x-scriptlet" data="app/template/component/addapp-genetor.html" width=100% height=100%></object>
+                  </div>
+                  <div slot="modal-footer" class="modal-footer">
+                    <button type="button" class="btn btn-default" @click='showCustomModal = false'>Exit</button>
+                    <button type="button" class="btn btn-success" @click='showCustomModal = false'>Custom Save</button>
+                  </div>
+                </modal>
+              </div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div><div class="app"></div>
+              <div class="app"></div>
             </div>
-            <div class="app add-app" id="app999" @click="show(999)">
-              <img src="app/images/app-icons/add-app1.png">
-              <span>创建应用</span>
-              <modal id="appmodal999" :show.sync="zoomadd" effect="zoom">
-                <div slot="modal-header" class="modal-header">
-                  <button type="button" class="modal-btn close" @click="close(999)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
-                  <button type="button" class="modal-btn maxify" @click="max(999)"><span v-if="!ismaxadd" class="glyphicon glyphicon-unchecked"></span>
-                  <span v-if="ismaxadd" class="glyphicon glyphicon-modal-window"></span></button>
-                  <button type="button" class="modal-btn minify" @click="min(999)"><span  class="glyphicon glyphicon-minus"></span></button>
-                  <h4 class="modal-title">
-                    <b>增加游戏</b>
-                  </h4>
-                </div>
-                <div slot="modal-body" class="modal-body">
-                  <h6>增加游戏表单</h6>
-                  <hr>
-                  <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Input Box</label>
-                      <div class="col-lg-8">
-                        <input type="text" class="form-control" placeholder="Input Box">
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Password</label>
-                      <div class="col-lg-8">
-                        <input type="password" class="form-control" placeholder="Password Box">
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Textarea</label>
-                      <div class="col-lg-8">
-                        <textarea class="form-control" rows="3" placeholder="Textarea"></textarea>
-                      </div>
-                    </div>    
-                    
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Checkbox</label>
-                      <div class="col-lg-8">
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox2" value="option2"> 2
-                        </label>
-                        <label class="checkbox-inline">
-                          <input type="checkbox" id="inlineCheckbox3" value="option3"> 3
-                        </label>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Radio Box</label>
-                      <div class="col-lg-8">
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-                            Option one is this and that—be sure to include why it's great
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                            Option two can be something else and selecting it will deselect option one
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Select Box</label>
-                      <div class="col-lg-8">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                    </div>     
-
-                    <div class="form-group">
-                      <label class="col-lg-4 control-label">Select Box</label>
-                      <div class="col-lg-8">
-                        <select multiple="" class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                    </div>   
-
-                        <hr>
-                    <div class="form-group">
-                      <div class="col-lg-offset-1 col-lg-9">
-                        <button type="button" class="btn btn-default">Default</button>
-                        <button type="button" class="btn btn-primary">Primary</button>
-                        <button type="button" class="btn btn-success">Success</button>
-                        <button type="button" class="btn btn-info">Info</button>
-                        <button type="button" class="btn btn-warning">Warning</button>
-                        <button type="button" class="btn btn-danger">Danger</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-                <div slot="modal-footer" class="modal-footer">
-                  <button type="button" class="btn btn-default" @click='showCustomModal = false'>Exit</button>
-                  <button type="button" class="btn btn-success" @click='showCustomModal = false'>Custom Save</button>
-                </div>
-              </modal>
+            <div class="container_item">
+              <div class="app" id="app1">
+                
+              </div>
+              <div class="app"></div>
+              <div class="app"></div>
+              <div class="app"></div>
             </div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div><div class="app"></div>
-            <div class="app"></div>
-          </div>
-          <div class="container_item">
-            <div class="app" id="app1">
-              
+            <div class="container_item">
+              <div class="app"></div>
             </div>
-            <div class="app"></div>
-            <div class="app"></div>
-            <div class="app"></div>
-          </div>
-          <div class="container_item">
-            <div class="app"></div>
-          </div>
-          <div class="container_item">
-            <div class="app"></div>
-            <div class="app"></div>
-            <div class="app"></div>
-            <div class="app"></div>
-            <div class="app"></div>
-            <div class="app"></div>
-          </div>
-        </div>
-      </div>
-      <!-- <div  class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="modal-btn close" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
-              <button type="button" class="modal-btn minify"><span class="glyphicon glyphicon-unchecked"></span></button>
-              <button type="button" class="modal-btn maxify"><span class="glyphicon glyphicon-minus"></span></button>
-              <h4 class="modal-title" id="myModalLabel"></h4>
-            </div>
-            <div class="modal-body">
+            <div class="container_item">
+              <div class="app"></div>
+              <div class="app"></div>
+              <div class="app"></div>
+              <div class="app"></div>
+              <div class="app"></div>
+              <div class="app"></div>
             </div>
           </div>
         </div>
-      </div> -->
+        <!-- <div  class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="modal-btn close" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
+                <button type="button" class="modal-btn minify"><span class="glyphicon glyphicon-unchecked"></span></button>
+                <button type="button" class="modal-btn maxify"><span class="glyphicon glyphicon-minus"></span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+              </div>
+              <div class="modal-body">
+              </div>
+            </div>
+          </div>
+        </div> -->
+       </div> 
     </div>
     <script src="app/js/desktop.js"></script>
     <!--<script src="/dist/js/main.js"></script> -->

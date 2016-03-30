@@ -40,8 +40,19 @@ a{
     -webkit-transition: background 1s; 
     -o-transition: background 1s;
 }
+.login{
+    background: rgb(243,243,243) url("../images/modal-back.png") repeat;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+}
 #app{
     background: url("../images/background/background.jpg") 50% / cover fixed;
+}
+#login::before{
+   background: url("../images/background/background.jpg") 50% / cover fixed;
+   background-attachment: inherit;
 }
 .header::before{
     /*background-color: #fff;*/
@@ -50,7 +61,7 @@ a{
     opacity: 0.4;
 }
 .sidebar::before{
-	background: url("../images/background/background.jpg") 50% / cover fixed;
+    background: url("../images/background/background.jpg") 50% / cover fixed;
     background-attachment: inherit;
 }
 /*.dropdown-menu::before,li.menu ul::before{
@@ -69,7 +80,7 @@ a{
 .background-select .selected{
     background-color: #217DEB;
 }
-.background-select .selected:before{
+.background-select .selected::before{
     position: absolute;
     width:100%;
     height: 100%;
@@ -91,6 +102,9 @@ a{
     padding:0 15px;
     border-right:1px solid #111;
 }
+.header .user-logo img{
+    height: 35px;
+}
 .header>.user-logo>i{
     width: 100%;
     height: 100%;
@@ -110,6 +124,7 @@ a{
 }
 .header .header-menu .left-menu{
     float: left;
+    /*display: inline-block;*/
 }
 .header .header-menu .btn-group,.header .header-menu .input-group{
     float: left;
@@ -118,14 +133,19 @@ a{
 }
 .header .header-menu .right-menu{
     float:right;
+    /*display: inline-block;*/
 }
 .header .header-menu button{
     margin-top: -2px;
+}
+.input-group-addon{
+    /*display: inline-block;*/
 }
 .header .header-menu .input-group-addon,.header .header-menu button{
     background-color: transparent!important;
     border:none!important;
     padding:10px;
+    /*display: inline-block;*/
 }
 .header .header-menu .btn-group.open{
     background-color: rgb(33,125,235);
@@ -136,6 +156,10 @@ a{
     background-color: rgb(33,125,235)!important;
     color:#fff;
     /*color:blue;*/
+}
+.dropdown-menu .divider{
+    display: inline-block;
+    width: 100%;
 }
 .dropdown-menu li > a {
     color: #000;
@@ -258,8 +282,11 @@ li.v-cut-line {
 	border-left: none;
 	z-index: 100;
 }
+.sidebar{
+    background-color: rgba(255,255,255,0.8);
+}
 .header::before,.sidebar::before{
-	content: '';
+	content: '.';
     display: inline-block;
     vertical-align: middle;
     position: absolute;
@@ -269,7 +296,11 @@ li.v-cut-line {
     left: 0;
     bottom: 0;
     -webkit-filter: blur(60px);
-    filter: blur(20px);
+    filter: url(blur.svg#blur);
+    -moz-filter: blur(60px);
+    -ms-filter: blur(60px);
+    filter: blur(60px);
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=60, MakeShadow=false);
     margin: -30px;
 }
 .centerd{
@@ -672,18 +703,36 @@ li.v-cut-line {
   position:relative;
   background-color:transparent;
 }
-.modal-header {
+.widget .widget-head,.modal-header {
     position: absolute;
     width: 100%;
     top: 0px;
     padding: 5px 15px;
-    FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=rgb(243,243,239),endColorStr=rgb(227,227,227)); /*IE 6 7 8*/ 
+    FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#F2F2EE,endColorStr=#CCCCCC); /*IE 6 7 8*/ 
     background: -ms-linear-gradient(top, rgb(243,243,239),  rgb(227,227,227));        /* IE 10 */
     background:-moz-linear-gradient(top,rgb(243,243,239),rgb(227,227,227));/*火狐*/ 
     background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(rgb(243,243,239)), to(rgb(227,227,227)));/*谷歌*/ 
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(243,243,239)), to(rgb(227,227,227)));      /* Safari 4-5, Chrome 1-9*/
     background: -webkit-linear-gradient(top, rgb(243,243,239), rgb(227,227,227));   /*Safari5.1 Chrome 10+*/
     background: -o-linear-gradient(top, rgb(243,243,239), rgb(227,227,227)); 
+}
+.widget .widget-foot{
+    background-color: #f8f8f8;
+    background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f2f2f2));
+    background: -webkit-linear-gradient(top, #f8f8f8, #f2f2f2);
+    background: -moz-linear-gradient(top, #f8f8f8, #f2f2f2);
+    background: -ms-linear-gradient(top, #f8f8f8, #f2f2f2);
+    background: -o-linear-gradient(top, #f8f8f8, #f2f2f2);
+    background: linear-gradient(top, #f8f8f8, #f2f2f2);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    text-shadow: 0px 1px #fff;
+    border-bottom: 1px solid #fff;
+    border-top: 1px solid #ccc;
+    padding: 8px 15px;
+    font-size: 12px;
+    color: #555;
+    box-shadow: inset 0px 1px 1px #fff;
 }
 .modal-content{
     background: rgb(243,243,243) url("../images/modal-back.png") repeat;
@@ -717,6 +766,7 @@ li.v-cut-line {
     outline: none;
     font-weight: lighter!important;
     outline: 0;
+    position: relative;
     transform: scale(0.95);
     -moz-transform: scale(0.95);
     -webkit-transform: scale(0.95);
@@ -843,6 +893,29 @@ modal{
 }
 object{
     border: 0px;
-    position: relative;
-    width: 100%;
+    position: absolute;
+    height:100%;
+    top: 0;
+    right: 0;
+    bottom:0;
+    left:0;
+    padding:15px 10px 10px 15px;
 }
+fieldset legend{
+    font-size: 12px;
+    height: 30px;
+}
+/**************login page***************/
+.admin-form {
+    max-width: 500px;
+    margin: 50px auto;
+}
+.widget {
+    border: 1px solid #c9c9c9;
+    border-radius: 3px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #fafafa;
+    position: relative;
+    padding-top: 50px;
+}    

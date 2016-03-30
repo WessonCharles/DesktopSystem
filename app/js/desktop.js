@@ -8,6 +8,32 @@ window.Interface = {
     var date = new Date(strTime);
     return date.getFullYear()+"-"+((date.getMonth()+1)<10?("0"+(date.getMonth()+1)):(date.getMonth()+1))+"-"+date.getDate();
   },
+  oneAnimationEnd:function(el,callback){
+  //动画执行完毕后要执行的事件，适用于只执行一次动画的场景，并且不影响其他功能的情况下使用
+  //以及使用其他方法代替setTimeout方法 避免内存消耗
+      el.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+        callback(el)
+      });
+  },
+  setCookie:function(name,value,d){
+    var Days = d||30;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString()+";path=/;";
+  },
+  //读取cookies
+  getCookie:function(name){
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+    if(arr=document.cookie.match(reg)) return unescape(arr[2]);
+    else return null;
+  },
+  //删除cookies
+  delCookie:function(name){
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=this.getCookie(name);
+    if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString()+";path=/;";
+  } 
 
 }
 window.GCR = {
@@ -25,8 +51,10 @@ window.GCR = {
       app.css("background","url('"+bg+"') 50% / cover fixed");
 
       var pseheader = this.ruleSelector(".header::before").slice(-1),
+          pselogin = this.ruleSelector("#login::before").slice(-1),
           pseside = this.ruleSelector(".sidebar::before").slice(-1);
       pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
+      pselogin[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
       pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
     },
     setip:function(){
@@ -214,7 +242,6 @@ window.GCR = {
     }
 };
 GCR.init();
-
 /**
 *注册modal组件
 **/
@@ -232,6 +259,62 @@ Vue.component('alert',alert);
 var zindex = 0;
 
 /**
+*是否登录
+**/
+var islogin = Interface.getCookie("logininfo")?true:false;
+// var out = new Vue({
+//   el:"#app",
+//   data:function(){
+//     return {
+//       islogin:islogin,
+//       form:{
+//         email:"",
+//         password:""
+//       }
+//     }
+//   },
+//   methods:{
+//     login:function(){
+//       console.log("@3241");
+//       console.log(this.form)
+//       if(this.form.email=="11@qq.com"&&this.form.password=="11"){
+//         this.islogin = true;
+//         Interface.setCookie("logininfo",this.form.email,1)
+//       }
+//     }
+//   }
+// });
+// console.log(out)
+
+var login = new Vue({
+  el:"#login",
+  data:function(){
+    return {
+      islogin:islogin,
+      form:{
+        email:"",
+        password:""
+      }
+    }
+  },
+  methods:{
+    login:function(){
+      console.log("@3241");
+      console.log(this.form)
+      if(this.form.email=="11@qq.com"&&this.form.password=="11"){
+        console.log("2341")
+        this.islogin = true;
+        Interface.setCookie("logininfo",this.form.email,1)
+      }
+    }
+  }
+})
+
+login.$watch("islogin",function(n){
+  console.log(n)
+})
+
+/**
 *实例化用户下拉框
 **/
 
@@ -239,20 +322,29 @@ var startmenu = new Vue({
   el:"#usetting",
   data:function(){
     return {
-      pages:['game','plat','permission','user'],
+      pages:['setting','task','note','game','plat','permission','user'],
       zooms:{
+        'setting':false,
+        'task':false,
+        'note':false,
         'game':false,
         'plat':false,
         'permission':false,
         'user':false
       },
       ismax:{
+        'setting':false,
+        'task':false,
+        'note':false,
         'game':false,
         'plat':false,
         'permission':false,
         'user':false
       },
       name:{
+        'setting':"修改个人设置",
+        'task':"我的任务管理(日历管理)",
+        'note':"记事本",
         'game':"游戏管理",
         'plat':"平台管理",
         'permission':"权限管理",
@@ -262,12 +354,10 @@ var startmenu = new Vue({
     }
   },
   ready:function(){
-    this.target = {
-      'game':$("#game_manage"),
-      'plat':$("#plat_manage"),
-      'permission':$("#permission_manage"),
-      'user':$("#user_manage")
-    };
+    this.target = {};
+    for(var i =0;i<this.pages.length;i++){
+      this.target[this.pages[i]] = $("#"+this.pages[i]+"_manage")
+    }
     for(var t in this.target){
       this.target[t].appendTo($("body"));
     }
@@ -278,11 +368,11 @@ var startmenu = new Vue({
     show:function(key){
       var tstr = "#"+key+"_manage";
       if(this.zooms[key]){
-        $("#desktop").find("li[data-target='"+key+"_manage']").addClass('flop')
-        setTimeout(function(){
-          $("#desktop").find("li[data-target='"+key+"_manage']").removeClass('flop');
+        $("#desktop").find("li[data-target='"+key+"_manage']").addClass('flop');
+        Interface.oneAnimationEnd($("#desktop").find("li[data-target='"+key+"_manage']"),function(e){
+          e.removeClass('flop');
           desks.toggleMin(key+"_manage",true);
-        },1000)
+        })
         return false;
       }
       
@@ -298,10 +388,10 @@ var startmenu = new Vue({
       !p?zindex--:null;
       $(tstr).removeClass('in');
       $(tstr).find(".modal-dialog").css("z-index","");
-      if(p){$(tstr).addClass("maxout");
-        setTimeout(function(){
-          $(tstr).css({"display":"none"});
-        },500)
+      if(p){
+        $(tstr).addClass("zoomOutDown",function(){
+          $(this).css({"display":"none"});
+        });
       }
     },
     min:function(key){
@@ -401,36 +491,41 @@ var rkmodal = new Vue({
   },
   methods:{
     show:function(){
+      console.log(this.zoomModal)
       if(this.zoomModal){
         var _this = this;
         $("#desktop").find("li[data-target='realrightmodal']").addClass('flop');
-        setTimeout(function(){
-          $("#desktop").find("li[data-target='realrightmodal']").removeClass('flop');
-          this.zoomModal = true;
-          desks.toggleMin("realrightmodal",true);
-        },1000)
-        
+        Interface.oneAnimationEnd($("#desktop").find("li[data-target='realrightmodal']"),function(e){
+          e.removeClass('flop');
+         _this.zoomModal = true;
+         desks.toggleMin("realrightmodal",true);
+        });
+        $("#rightkey").removeClass('open');
         return false;
       } 
       GCR.modals.show($("#realrightmodal"));
       this.zoomModal = true;
       zindex++;
+      $("#realrightmodal").addClass('in').css("display","block");
       $("#realrightmodal .modal-dialog").css("z-index",zindex);
-      // rightkeymenu.removeClass('open')
+      $("#rightkey").removeClass('open');
     },
     close:function(p){
-      !p?this.zoomadd = false:null;
-      !p?zindex--:null;
+      if(!p||p!="animate"){
+        this.zoomModal=false;
+        zindex--
+      }
       $("#realrightmodal").removeClass('in');
+      console.log(this.zoomModal)
       $("#realrightmodal .modal-dialog").css("z-index","");
-      if(p){$("#realrightmodal").addClass("maxout");
-        setTimeout(function(){
-          $("#realrightmodal").css({"display":"none"});
-        },500)
+      if(p&&p=="animate"){
+        $("#realrightmodal").addClass("zoomOutDown",function(){
+          $(this).css({"display":"none"});
+        });
       }
     },
     min:function(){
-      this.close(true);//与关闭操作相同，并加入到desktop最小化列表中
+      this.close("animate");//与关闭操作相同，并加入到desktop最小化列表中
       desks.minifys.push({
         el:$("#realrightmodal"),
         target:'realrightmodal',
@@ -438,6 +533,7 @@ var rkmodal = new Vue({
         name:$("#realrightmodal").find(".modal-title").text(),
         icon:'app/images/desktop-icons/folder-document.png'
       });
+      desks.isflop.push(false);
       GCR.fishdock();
     },
     max:function(){
@@ -456,12 +552,14 @@ var rkmodal = new Vue({
       this.bg.selected = index;
       // console.log(this.preimg)
       var app = $("#app"),
-          bg = this.preimg[index].src,
-          cssbg = this.preimg[index].src;
+          bg = this.bg.imgs[index],
+          cssbg = this.bg.imgs[index].replace("app","..");
       app.css("background","url('"+bg+"') 50% / cover fixed");
       var pseheader = GCR.ruleSelector(".header::before").slice(-1),
+          pselogin = GCR.ruleSelector("#login::before").slice(-1),
           pseside = GCR.ruleSelector(".sidebar::before").slice(-1);
       pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
+      pselogin[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
       pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
       window.localStorage.setItem("current-bg-url", bg);
       alerts.$set('content', "修改桌面背景成功");
@@ -520,12 +618,11 @@ var apps = new Vue({
         if(this.zoomadd){
           var _this = this;
           $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop');
-          setTimeout(function(){
-            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
-            this.zoomadd = true;
-            desks.toggleMin("appmodal"+index,true);
-          },1000)
-          
+          Interface.oneAnimationEnd($("#desktop").find("li[data-target='appmodal"+index+"']"),function(e){
+            e.removeClass('flop');
+             _this.zoomadd = true;
+             desks.toggleMin("appmodal"+index,true);
+          });
           return false;
         }
         GCR.modals.show($("#appmodal999"));
@@ -537,10 +634,10 @@ var apps = new Vue({
         if(this.zooms[index]){
           var _this = this;
           $("#desktop").find("li[data-target='appmodal"+index+"']").addClass('flop');
-          setTimeout(function(){
-            $("#desktop").find("li[data-target='appmodal"+index+"']").removeClass('flop');
+          Interface.oneAnimationEnd($("#desktop").find("li[data-target='appmodal"+index+"']"),function(e){
+            e.removeClass('flop');
             desks.toggleMin("appmodal"+index,true);
-          },1000)
+          });
           return false;
         }
         
@@ -561,10 +658,10 @@ var apps = new Vue({
       !p?zindex--:null;
       $("#appmodal"+index).removeClass('in');
       $("#appmodal"+index).find(".modal-dialog").css("z-index","");
-      if(p){$("#appmodal"+index).addClass("maxout");
-        setTimeout(function(){
-          $("#appmodal"+index).css({"display":"none"});
-        },500)
+      if(p){
+        $("#appmodal"+index).addClass("zoomOutDown",function(){
+          $(this).css({"display":"none"});
+        });
       }
     },
     min:function(index){
@@ -643,7 +740,6 @@ var desks = new Vue({
   },
   methods:{
     toggleMin:function(item,trigger){
-      // if(item.show){
         GCR.fishdock();
         var el = trigger?item:item.el;
         zindex++;
@@ -651,23 +747,18 @@ var desks = new Vue({
           for(var i=0;i<this.minifys.length;i++){
             if(this.minifys[i].target==item){
               this.minifys[i].el.css("display","block").css("z-index",zindex);
-              this.minifys[i].el.addClass('in').addClass("maxin").removeClass("maxout");
+              this.minifys[i].el.addClass('in').addClass("zoomInUp").removeClass("zoomOutDown");
               this.minifys.splice(i,1);
               this.isflop.splice(i,1);
               break;
             }
           }
-          
         }else{
          item.el.css("display","block").css("z-index",zindex);
-         item.el.addClass('in').addClass("maxin").removeClass("maxout");
+         item.el.addClass('in').addClass("zoomInUp").removeClass("zoomOutDown");
          this.minifys.splice(this.minifys.indexOf(item),1);
          this.isflop.splice(this.minifys.indexOf(item),1)
         }
-        
-
-        console.log(this.minifys)
-      // }
     }
   }
 })

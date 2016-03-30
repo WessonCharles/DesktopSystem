@@ -3076,7 +3076,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  methods: {
 	    toggleDropdown: function toggleDropdown(e) {
 	      e.preventDefault();
-	      this.$el.classList.toggle('open');
+	      var el = this.$el;
+	      if(el.classList){
+	      	el.classList.toggle('open')
+	      }else{
+	      	if(el.className.indexOf("open")>-1){
+	      		console.log(el.className.split(" "))
+	      		console.log(el.className.split(" ").indexOf("open"))
+	      		el.className = "btn-group";
+	      		console.log(el.className)
+	      	}else{
+	      		el.className+= " open";
+	      	}
+	      }
 	    }
 	  },
 	  ready: function ready() {
@@ -3087,7 +3099,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      toggle.addEventListener('click', this.toggleDropdown);
 	    }
 	    this._closeEvent = _EventListener2.default.listen(window, 'click', function (e) {
-	      if (!el.contains(e.target)) el.classList.remove('open');
+	      if (!el.contains(e.target)){
+	      	el.classList?el.classList.remove('open'):(function(){
+	          	el.className.split(" ").splice(el.className.split(" ").indexOf("open"),1).join(" ");
+	        });
+	       }
 	    });
 	  },
 	  beforeDestroy: function beforeDestroy() {
@@ -3252,9 +3268,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        el.querySelector('.modal-content').focus();
 	        el.style.display = 'block';
 	        setTimeout(function () {
-	          return el.classList.add('in');
+	          return (function(){el.classList?el.classList.add('in'):(function(){
+	          	el.className+=" in";
+	          })});
 	        }, 0);
-	        body.classList.add('modal-open');
+	        body.classList?body.classList.add('modal-open'):(function(){
+	        	body.className+=" modal-open";
+	        });
 	        if (scrollBarWidth !== 0) {
 	          body.style.paddingRight = scrollBarWidth + 'px';
 	        }
@@ -3265,10 +3285,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      } else {
 	        if (_this._blurModalContentEvent) _this._blurModalContentEvent.remove();
-	        el.classList.remove('in');
+	        el.classList?el.classList.remove('in'):(function(){
+	        	el.className.split(" ").splice(el.className.split(" ").indexOf("in"),1).join(" ");
+	        });
 	        setTimeout(function () {
 	          el.style.display = 'none';
-	          body.classList.remove('modal-open');
+	          body.classList?body.classList.remove('modal-open'):(function(){
+	          	body.className.split(" ").splice(body.className.split(" ").indexOf("modal-open"),1).join(" ");
+	          });
 	          body.style.paddingRight = '0';
 	        }, 300);
 	      }

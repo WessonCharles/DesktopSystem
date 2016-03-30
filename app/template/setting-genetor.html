@@ -1,0 +1,86 @@
+<link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../css/mac.css">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<style type="text/css">
+	body{
+		background: rgb(243,243,243) url("../images/modal-back.png") repeat;
+		padding: 0;
+		border: 0;
+		overflow-y: auto;
+	}
+	.input-group.panel{
+		border-radius: 10px;
+	}
+	.container{
+		min-width: 960px!important;
+	}
+</style>
+<div class="row">
+	<div class="col-xs-6">
+		<form>
+			<fieldset>
+				<legend>修改头像</legend>
+				<div class="form-group">
+					<img src="../images/avator.png" alt="修改头像" class="center-block">
+				</div>
+				<div class="form-group">
+					<div class="col-lg-8">
+						<button class="btn btn-primary center-block">上传头像</button>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="col-xs-6">
+		<form>
+			<fieldset>
+			    <legend>密码修改</legend>
+			    <div class="form-group">
+			      <!-- <label class="col-lg-4 control-label">Password</label> -->
+			      <div class="col-lg-8">
+			        <input type="password" class="form-control" placeholder="旧密码">
+			      </div>
+			    </div>
+			    <div class="form-group">
+			      <div class="col-lg-8">
+			        <input type="password" class="form-control" placeholder="新密码">
+			      </div>
+			    </div>
+			    <div class="form-group">
+				    <div class="col-lg-8">
+				    	<button type="button" class="btn btn-primary">修改密码</button>
+				    </div>
+			    </div>
+		  	</fieldset>
+		</form>
+	</div>
+</div>
+<script src="../../bower_components/vue/dist/vue.min.js"></script>
+<script src="../../bower_components/vue-strap/dist/vue-strap.min.js"></script>
+<script type="text/javascript">
+	var tabs = VueStrap.tabset,
+		tab = VueStrap.tab,
+		select = VueStrap.select,
+		option = VueStrap.option;
+	// console.log(modal)
+	Vue.component('tabs',tabs);
+	Vue.component('tab',tab);
+	Vue.component('vSelect',select);
+	Vue.component('vOption',option);
+	var tabss = new Vue({
+	  el:"#tabs",
+	  data:function(){
+	  	return {
+	  		fruitOptions:[
+  			  {value:'apple', label:'服务器'},
+  			  {value:'banana', label:'游戏区服'},
+  			  {value:'cherry', label:'任务日志'},
+  			  {value:'orange', label:'监控'}
+  			],
+  			arr:[]
+	  	}
+	  }
+	});
+
+	console.log(tabss)
+</script>
