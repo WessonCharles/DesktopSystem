@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="app/css/main.css">
     <style>
     </style>
+    <script type="text/javascript">
+    document.all&&document.execCommand("BackgroundImageCache", false, true); 
+    </script>
     <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="app/js/plugins.js"></script>
@@ -158,12 +161,19 @@
         </div>
         <div class="centerd">
             <ul id="desktop">
+              <!--公用app-->
               <li v-for="item in apps">
                 <img v-bind:src="item.icon">
               </li>
+              <!--已打开的app最小化-->
               <li v-if="minifys.length>0" class="v-cut-line"></li>
               <li v-for="item in minifys" data-target="{{item.target}}" @click="toggleMin(item)" v-bind:class="{'flop':isflop[$index]}" class="desk-mini">
-                <img v-bind:src="item.icon" v-bind:title="item.name">
+                <tooltip
+                  effect="scale"
+                  placement="top"
+                  v-bind:content="item.name">
+                  <img v-bind:src="item.icon" v-bind:title="item.name">
+                </tooltip>
                 <!-- <span>{{item.name}}</span> -->
               </li>
             </ul>
@@ -195,7 +205,8 @@
               </modal>
             </div>
             <div class="app add-app" id="app999" @click="show(999)">
-              <img src="app/images/app-icons/add-app.png">
+              <img src="app/images/app-icons/add-app1.png">
+              <span>创建应用</span>
               <modal id="appmodal999" :show.sync="zoomadd" effect="zoom">
                 <div slot="modal-header" class="modal-header">
                   <button type="button" class="modal-btn close" @click="close(999)" data-dismiss="modal" aria-label="Close"><span class="glyphicon glyphicon-remove"></span></button>
@@ -356,7 +367,7 @@
         </div>
       </div> -->
     </div>
-    <!--<script src="app/js/desktop.js"></script>-->
-    <script src="/dist/js/main.js"></script> 
+    <script src="app/js/desktop.js"></script>
+    <!--<script src="/dist/js/main.js"></script> -->
   </body>
 </html>

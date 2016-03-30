@@ -194,7 +194,11 @@ window.GCR = {
         if(it.find(".modal-dialog")[0].offsetWidth==0){
           it.find(".modal-dialog").css({
             left:l+"px",
-            top:t+"px"
+            top:t+"px",
+            height:$(window).height()/2
+          })
+          it.find(".modal-dialog .modal-content").css({
+            height:$(window).height()/2-it.find(".modal-dialog .modal-header")[0].offsetHeight
           })
         }
       },
@@ -387,6 +391,7 @@ var rkmodal = new Vue({
     }
   },
   ready:function(){
+    var _this = this;
     $("#realrightmodal").appendTo($("body"));
     this['target'] = $("#realrightmodal").find(".modal-dialog");
     GCR.modals.ready();
@@ -449,20 +454,33 @@ var rkmodal = new Vue({
     },
     setbg:function(index){
       this.bg.selected = index;
+      // console.log(this.preimg)
       var app = $("#app"),
-          bg = this.bg.imgs[index],
-          cssbg = this.bg.imgs[index].replace("app","..");
-          var pseheader = GCR.ruleSelector(".header::before").slice(-1),
-              pseside = GCR.ruleSelector(".sidebar::before").slice(-1);
-          pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
-          pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
+          bg = this.preimg[index].src,
+          cssbg = this.preimg[index].src;
       app.css("background","url('"+bg+"') 50% / cover fixed");
+      var pseheader = GCR.ruleSelector(".header::before").slice(-1),
+          pseside = GCR.ruleSelector(".sidebar::before").slice(-1);
+      pseheader[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
+      pseside[0].style.background = "url('"+cssbg+"') 50% / cover fixed";
       window.localStorage.setItem("current-bg-url", bg);
       alerts.$set('content', "修改桌面背景成功");
       alerts.$set('showTop',true);
     }
   }
 })
+
+rkmodal.$set("preimg",[]);//图片预加载，防止360浏览器切换背景时闪烁，但是貌似没什么卵用
+for(i=0;i<rkmodal.bg.imgs.length;i++){
+    var img = new Image();
+    img.src = rkmodal.bg.imgs[i];
+    img.onload = function(){
+      this.width = 1920;
+      this.height = 1200;
+    }
+    rkmodal["preimg"].push(img); 
+}
+console.log(rkmodal)
 
 /**
 *实例化apps的modal
@@ -628,11 +646,11 @@ var desks = new Vue({
       // if(item.show){
         GCR.fishdock();
         var el = trigger?item:item.el;
-        
+        zindex++;
         if(trigger){
           for(var i=0;i<this.minifys.length;i++){
             if(this.minifys[i].target==item){
-              this.minifys[i].el.css("display","block");
+              this.minifys[i].el.css("display","block").css("z-index",zindex);
               this.minifys[i].el.addClass('in').addClass("maxin").removeClass("maxout");
               this.minifys.splice(i,1);
               this.isflop.splice(i,1);
@@ -641,7 +659,7 @@ var desks = new Vue({
           }
           
         }else{
-         item.el.css("display","block");
+         item.el.css("display","block").css("z-index",zindex);
          item.el.addClass('in').addClass("maxin").removeClass("maxout");
          this.minifys.splice(this.minifys.indexOf(item),1);
          this.isflop.splice(this.minifys.indexOf(item),1)

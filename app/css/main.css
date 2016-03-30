@@ -1,4 +1,3 @@
-
 html,body{
     height: 100%;
     position: relative;
@@ -11,17 +10,35 @@ html,body{
     user-select: text;
 }
 .unselection{
-    /*-webkit-user-select: none;  
+    -webkit-user-select: none;  
     -moz-user-select: none;    
     -ms-user-select: none;   
     -o-user-select: none;
-    user-select: none;*/
+    user-select: none;
 }
 h4{
     font-size: 16px;
 }
 a{
     cursor: pointer;
+}
+/**
+ * 整个页面
+ */
+#app{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    transition: background 1s;
+    -moz-transition: background 1s; 
+    -webkit-transition: background 1s; 
+    -o-transition: background 1s;
 }
 #app{
     background: url("../images/background/background.jpg") 50% / cover fixed;
@@ -46,7 +63,7 @@ a{
 }
 .background-select img{
     width:150px;
-    margin: 5px 18px;
+    margin: 5px 15px;
     border: 1px solid #aaa;
 }
 .background-select .selected{
@@ -56,23 +73,6 @@ a{
     position: absolute;
     width:100%;
     height: 100%;
-}
-/**
- * 整个页面
- */
-#app{
-	width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transition: background 1s;
-    -moz-transition: background 1s; 
-    -webkit-transition: background 1s; 
-    -o-transition: background 1s;
 }
 /**
  * 头
@@ -241,12 +241,6 @@ li.v-cut-line {
     width: 2px!important;
     margin-left: 10px!important;
     background-color: rgb(39,51,63);
-}
-li.desk-mini span {
-    font-size: 10px;
-    display: inline-block;
-    position: absolute;
-    margin: -4px -10px 0px -10px;
 }
 .dock-outer ul>li img{
     width:100%;
@@ -679,6 +673,9 @@ li.desk-mini span {
   background-color:transparent;
 }
 .modal-header {
+    position: absolute;
+    width: 100%;
+    top: 0px;
     padding: 5px 15px;
     FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=rgb(243,243,239),endColorStr=rgb(227,227,227)); /*IE 6 7 8*/ 
     background: -ms-linear-gradient(top, rgb(243,243,239),  rgb(227,227,227));        /* IE 10 */
@@ -690,10 +687,11 @@ li.desk-mini span {
 }
 .modal-content{
     background: rgb(243,243,243) url("../images/modal-back.png") repeat;
-    padding-bottom:41px;
+    /*padding-bottom:41px;*/
 }
 .modal-body{
-    /*height:100%;*/
+    height:100%;
+    overflow: auto;
 }
 .modal-footer{
     position: absolute;
@@ -702,6 +700,7 @@ li.desk-mini span {
 }
 .modal-content{
     border-radius: 3px;
+    padding-top: 38px;
 }
 .modal-btn{
     border-radius: 9px;
@@ -739,7 +738,7 @@ li.desk-mini span {
 .nofoot .modal-content{
     padding-bottom: 0!important;
 }
-.nofoot .modal-footer{
+body>.modal .modal-footer,.nofoot .modal-footer{
     display: none!important;
 }
 .btn{
@@ -836,4 +835,14 @@ modal{
 }
 .table {
     font-size: 12px;
+}
+.desk-mini .tooltip.top{
+    left: auto!important;
+    margin-top: -10px;
+    margin-left: 10px;
+}
+object{
+    border: 0px;
+    position: relative;
+    width: 100%;
 }

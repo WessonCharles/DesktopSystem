@@ -351,7 +351,7 @@ $.fn.draggable = function(options){
       $("body").mousemove(function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
             t.addClass('Moving')
             $(this).addClass('unselection');
-            _that.bind('selectstart',function(){return false;});
+            $(document).bind('selectstart',function(){return false;});
             t.find(".modal-dialog").css("position","absolute");
             var _x = ev.clientX - x;//获得X轴方向移动的值
             var _y = ev.clientY - y;//获得Y轴方向移动的值
@@ -407,10 +407,11 @@ $.fn.resizable = function(argument) {
      var height = target[0].offsetHeight;
       $("body").bind("mousemove",function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
           $(this).addClass('unselection');
-          t.bind('selectstart',function(){return false;});
+          $(document).bind('selectstart',function(){return false;});
           var _x = ev.clientX-wx;
-          target.css({"width":_x+"px",height:height+"px"});
-          t.find(".modal-content").css({"width":_x+"px",height:height+"px"});          
+          if(_x<300)return false;
+            target.css({"width":_x+"px",height:height+"px"});
+            t.find(".modal-content").css({"width":_x+"px",height:height+"px"});    
       });
   });
   $(document).delegate(".heng","mousedown",function(e){//e鼠标事件  竖向移动
@@ -432,11 +433,13 @@ $.fn.resizable = function(argument) {
      var height = target[0].offsetHeight;
       $("body").bind("mousemove",function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
           $(this).addClass('unselection');
-          t.bind('selectstart',function(){return false;});
+          $(document).bind('selectstart',function(){return false;});
           console.log("----"+l)
           var _y = ev.clientY - wy;//获得Y轴方向移动的值
+          if(_y<300)return false;
           target.css({"height":_y+"px","width":width+"px"});    
-          t.find(".modal-content").css({"height":_y+"px","width":width+"px"});       
+          t.find(".modal-content").css({"height":_y+"px","width":width+"px"});
+                 
       });
   });
   $(document).delegate(".youxiajiao","mousedown",function(e){//e鼠标事件 斜下方移动
@@ -456,12 +459,13 @@ $.fn.resizable = function(argument) {
      var wy = target[0].getBoundingClientRect().top;
       $("body").bind("mousemove",function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
           $(this).addClass('unselection');
-          t.bind('selectstart',function(){return false;});
+          $(document).bind('selectstart',function(){return false;});
           var _x = ev.clientX - wx;//获得X轴方向移动的值
           var _y = ev.clientY - wy;//获得Y轴方向移动的值
+          if(_x<300&&_y<300)return false;
           target.css({"width":_x+"px","height":_y+"px"});
           // console.log(t.find(".modal-content")) 
-          t.find(".modal-content").css({"width":_x+"px","height":_y+"px"});            
+          t.find(".modal-content").css({"width":_x+"px","height":_y+"px"});
       });
   });
 
