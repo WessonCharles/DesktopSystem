@@ -46,6 +46,10 @@ a{
     width: 100%;
     height: 100%;
     z-index: 2000;
+    display: none;
+}
+.show{
+    display: block!important;
 }
 #app{
     background: url("../images/background/background.jpg") 50% / cover fixed;
@@ -101,6 +105,17 @@ a{
     margin-top: 0px;
     padding:0 15px;
     border-right:1px solid #111;
+}
+.logout{
+    float: right!important;
+    margin-right: 0;
+    border: none!important;
+    font-size: 24px;
+    width: 35px!important;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    color:#FF2D3A;
 }
 .header .user-logo img{
     height: 35px;
@@ -859,9 +874,19 @@ modal{
 .shu{
     position:absolute;right:-3px;top:0;height:100%;width:5px;cursor:ew-resize;
 }
-.youxiajiao{
-    position:absolute;right:-3px;bottom:-3px;width:10px;height:10px;cursor:nwse-resize
+.youxiajiao {
+position: absolute;
+right: 3px;
+bottom: 3px;
+width: 15px;
+color: #666;
+height: 15px;
+cursor: nwse-resize;
 }
+/*.youxiajiao::before {
+content: "◢";
+font-size: 17px;
+}*/
 .v-cut-line{
 
 }

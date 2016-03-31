@@ -40,7 +40,6 @@ window.GCR = {
     init:function(){
       this.loadBg();
       this.setip();
-      this.setCurrentTime();
       this.baseHandle();
       this.fishdock();
     },
@@ -60,10 +59,6 @@ window.GCR = {
     setip:function(){
       var ele = document.getElementById("current_ip");
       ele.innerHTML = returnCitySN["cname"]+" "+returnCitySN["cip"];
-    },
-    setCurrentTime:function(){
-      var date = document.getElementById("current_date");
-      date.innerHTML = Interface.FormatDate(new Date());
     },
     baseHandle:function(){
       var _this = this;
@@ -286,6 +281,9 @@ var islogin = Interface.getCookie("logininfo")?true:false;
 // });
 // console.log(out)
 
+/**
+*登录
+**/
 var login = new Vue({
   el:"#login",
   data:function(){
@@ -310,8 +308,27 @@ var login = new Vue({
   }
 })
 
-login.$watch("islogin",function(n){
-  console.log(n)
+// login.$watch("islogin",function(n){
+//   console.log(n)
+// })
+
+/**
+退出登录
+**/
+var logout = new Vue({
+  el:"#logout",
+  data:function(){
+    return {
+      time:Interface.FormatDate(new Date())
+    }
+  },
+  methods:{
+    logout:function(){
+      console.log("sdfasdfa")
+      login.islogin=false;
+      Interface.delCookie("logininfo");
+    }
+  }
 })
 
 /**

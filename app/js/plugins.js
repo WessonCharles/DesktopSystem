@@ -398,38 +398,42 @@ jQuery.fn.Fisheye = jQuery.iFisheye.build;
  * @param  {[type]} options [description]
  * @return {[type]}         [description]
  */
-$.fn.draggable = function(options){
+jQuery.fn.draggable = function(options){
+    return this.each(function(){
   var target = $(this);
   if(options&&options.handle){
     target = $(this).find(options.handle);
   }
   var _that = $(this);
-  var t,zindex;
+  var t = _that,zindex;
   target.hover(function(){$(this).css("cursor","move");},function(){$(this).css("cursor","default");})
   var x,y,flag = false;
   _that.find('.modal-dialog').mousedown(function(){
     var t = $(this);
     if(t.hasClass('maxty'))return false;
     if(t.css("z-index")<2000){
-        $(".modal").find(".modal-dialog").css("z-index",0)
+        // $(".modal").css("z-index",0)
+        // t.parents(".modal").css("z-index",2000);
         t.css("z-index",2000);
     }
   })
   target.mousedown(function(e){//e鼠标事件
-    t = $(this).parents(".modal");
+    // t = $(this).parents(".modal");
     if(t.find('.modal-dialog').hasClass('maxty'))return false;
     zindex = t.find(".modal-dialog").css("z-index");
       x = e.clientX - t.find(".modal-dialog")[0].offsetLeft;
       y = e.clientY - t.find(".modal-dialog")[0].offsetTop;
       $("body").mousemove(function(ev){//绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
-            t.addClass('Moving')
+            t.addClass('Moving');
+            flag = true;
             $(this).addClass('unselection');
             $(document).bind('selectstart',function(){return false;});
             t.find(".modal-dialog").css("position","absolute");
             var _x = ev.clientX - x;//获得X轴方向移动的值
             var _y = ev.clientY - y;//获得Y轴方向移动的值
             if(t.hasClass('modal')){
-              _y = t.attr("id").indexOf("_manage")>-1?_y:(_y-110);
+              _y = t.attr("id")=="realrightmodal"?(_y-50):(t.attr("id").indexOf("_manage")>-1?_y:(_y-110));
+              // t.css("z-index",2000);
               t.find(".modal-dialog").css({'opacity':'0.3','left':_x+"px",'top':_y+"px",'z-index':2000})
             }else{
               t.css({'left':_x+"px",'top':_y+"px"});
@@ -440,14 +444,36 @@ $.fn.draggable = function(options){
   $("body").mouseup(function(){
         $(this).unbind("mousemove");
         $(this).removeClass('unselection');
-        if(t){
-            t.removeClass("Moving")
+        if(t&&flag){
+            t.removeClass("Moving");
+            var modals = [];
+            $(".modal").each(function(){
+                var z = parseInt($(this).find(".modal-dialog").css("z-index"));
+                // if(z==0)return false;
+                modals.push({
+                    name:$(this).attr("id"),
+                    zindex:z
+                })
+            })
+            modals.sort(function(a,b){
+                return a.zindex>b.zindex?1:-1;
+            })
+            console.log(modals);
+            for(var i =0;i<modals.length;i++){
+                $("#"+modals[i].name).find(".modal-dialog").css("z-index",i);
+            }
+            // $("body .modal").css("z-index",0);
+            // $("body .modal .modal-dialog").css("z-index",0);
             if(t.hasClass('modal')){
+                // t.css("z-index",zindex);
               t.find(".modal-dialog").css({'opacity':''})
             }else{
+                // t.parents(".modal").css("z-index",zindex)
               t.css({'opacity':''});
             }
+            flag = false;
         }
+  })
   })
 }
 /**
@@ -456,13 +482,20 @@ $.fn.draggable = function(options){
  * @param  {[type]} argument [description]
  * @return {[type]}          [description]
  */
-$.fn.resizable = function(argument) {
+jQuery.fn.resizable = function(argument) {
+    // return this.each(function(){
+
+    // })
   var t,target = $(this).hasClass('modal')?$(this).find(".modal-dialog"):$(this);
   var box  = $(this).hasClass('modal')?$(this).find(".modal-content"):$(this);
   var heng = $('<div class="heng"></div>');
   var shu = $('<div class="shu"></div>');
   var youxiajiao = $('<div class="youxiajiao"></div>');
+  console.log(box.find(".heng"))
+
+  // if($(this).find(".heng").length==1)return false;
   box.append(heng).append(shu).append(youxiajiao);
+  
   var flag = false;
   $(document).delegate(".shu","mousedown",function(e){//e鼠标事件  横向移动
      target = $(this).parents(".modal-dialog");
